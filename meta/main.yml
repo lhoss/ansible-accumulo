@@ -115,7 +115,7 @@ galaxy_info:
   #- cloud:rax
   #- clustering
   #- database
- - database:nosql
+   - database:nosql
   #- database:sql
   #- development
   #- monitoring
