@@ -30,7 +30,8 @@
 
 if [ -z "$HADOOP_HOME" ]
 then
-   test -z "$HADOOP_PREFIX"      && export HADOOP_PREFIX=/usr/lib/hadoop
+##lhoss change:
+   test -z "$HADOOP_PREFIX"      && export HADOOP_PREFIX={{hadoop_home}}
 else
    HADOOP_PREFIX="$HADOOP_HOME"
    unset HADOOP_HOME
