@@ -27,6 +27,15 @@
     <description>comma separated list of zookeeper servers</description>
   </property>
 
+  <!-- default timeout: 30s , others tried 60s, see:
+       https://github.com/aglahe/vagrant-memex/blob/master/accumulo/accumulo-site.xml
+   -->
+  <property>
+    <name>instance.zookeeper.timeout</name>
+    <value>160s</value>
+    <description>Zookeeper session timeout; max value when represented as milliseconds should be no larger than Integer.MAX_VALUE</description>
+  </property>
+
   <property>
     <name>logger.dir.walog</name>
     <value>walogs</value>
@@ -46,19 +55,67 @@
     </description>
   </property>
 
+  <!-- Disable the write-ahead log
+     Disabled the 'write-ahead log, after an Accumulu research paper revealed a ~30% performance gain.
+    -->
+  <!-- default: true , orig: true -->
+  <property>
+    <name>table.walog.enabled</name>
+    <value>false</value>
+  </property>
+
+  <!-- default 1G , orig: 1G -->
   <property>
     <name>tserver.memory.maps.max</name>
+    <value>4G</value>
+  </property>
+
+  <!-- Important formula beween the 'maps.max' and below 2 settings
+    (table.compaction.minor.logs.threshold * tserver.walog.max.size >= tserver.memory.maps.max)
+    This formula ensures that minor compactions won't be automatically triggered before the native maps can be completely saturated.
+   -->
+  <!-- default 1G , orig: 1G -->
+  <property>
+    <name>tserver.walog.max.size</name>
     <value>1G</value>
   </property>
 
+  <!-- default 3 , orig: 3 -->
+  <!-- Info from mail-list:
+  2. increasing the number of WALS associated with a tablet...this parameter is table.compaction.minor.logs.threshold
+  but is only important if you are seeing this as the reason for minc in the logs. It's OK to increase it to like 5-6
+   it just makes recovery slower. On a long running ingest if you see spikes that take the rate almost down to zero
+   that's generally what is happening. It gets worse as the number of tablets increases.
+     -->
   <property>
-    <name>tserver.cache.data.size</name>
-    <value>128M</value>
+    <name>table.compaction.minor.logs</name>
+    <value>6</value>
   </property>
 
+  <!-- default 1M , orig: 1M -->
+  <property>
+    <name>tserver.mutation.queue.max</name>
+    <value>8M</value>
+  </property>
+
+  <!-- default 4 , orig: 4 -->
+  <property>
+    <name>tserver.compaction.minor.concurrent.max</name>
+    <value>4</value>
+  </property>
+
+
+
+  <!-- default 128M , orig: 128M -->
+  <property>
+    <name>tserver.cache.data.size</name>
+    <value>256M</value>
+  </property>
+
+  <!-- default 512M , orig: 128M -->
   <property>
     <name>tserver.cache.index.size</name>
-    <value>128M</value>
+    <value>512M</value>
   </property>
 
   <property>
