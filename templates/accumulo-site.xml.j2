@@ -121,12 +121,12 @@
   <property>
     <name>trace.token.property.password</name>
     <!-- change this to the root user's password, and/or change the user below -->
-    <value>secret</value>
+    <value>{{ accumulo_trace_password }}</value>
   </property>
 
   <property>
     <name>trace.user</name>
-    <value>root</value>
+    <value>{{ accumulo_trace_user }}</value>
   </property>
 
   <property>
