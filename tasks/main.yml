@@ -2,8 +2,13 @@
 - include: install.yml
   tags: install
 
+- include: cron_failover_config_services_overrides.yml
+  when: accumulo_cron_failover
+  tags: [cron_failover,config]
+
 - include: config.yml
   tags: config
+
 
 ## Initially I added below 2 tasks for the functionality that seemed to be a 'failover' try using cron.
 ## To use it, uncomment (note: that the task includes existed already, but not below 2 tasks):
@@ -14,5 +19,3 @@
 - include: cron_failover_accumulo_follower.yml
   when: accumulo_cron_failover and  accumulo_leader == False
   tags: cron_failover
-
-##Note: was not required to have even the conf/slaves file, see: http://accumulo.apache.org/1.6/accumulo_user_manual.html#_cluster_specification
