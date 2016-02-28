@@ -3,6 +3,14 @@ accumulo_secret: "secret"
 accumulo_leader_host: "localhost"
 accumulo_instance_name: "geowave-accumulo-cluster"
 
+accumulo_user: "accumulo"
+accumulo_group: "accumulo"
+accumulo_cron_failover: false
+
+## Requires in accumulo-site.xml
+zookeeper_servers:
+ - { ip: "{{accumulo_leader_host}}" }
+
 ## Added 2 new variables to allow deploying a more customized hadoop environment
 hadoop_home: /usr/lib/hadoop
 hdfs_root_user: "hdfs"
