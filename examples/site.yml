@@ -10,4 +10,6 @@
 
   roles:
 #    - { role: "azavea.accumulo" }
-    - { role: "lhoss.accumulo" }
+    - { role: "lhoss.accumulo"
+#        , accumulo_leader: True
+       }

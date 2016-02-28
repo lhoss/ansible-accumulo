@@ -1,0 +1,32 @@
+---
+- name: Create service account for Accumulo
+  user: name=accumulo
+        system=yes
+        home=/var/lib/accumulo
+        shell=/bin/false
+        state=present
+
+- include: accumulo-1-5.yml
+  when: accumulo_version | version_compare('1.6', '<')
+- include: accumulo-1-6.yml
+  when: accumulo_version | version_compare('1.6', '>=')
+
+- name: Ensure Accumulo directories are owned by Accumulo user
+  file: path={{ item }}
+        owner=accumulo
+        mode=0755
+        state=directory
+  with_items:
+    - "{{ accumulo_log_dir }}/logs"
+    - "{{ accumulo_conf_dir }}"
+
+- name: Configure Accumulo service definitions
+  template: src=services/accumulo-{{ item }}.conf.j2
+            dest=/etc/init/accumulo-{{ item }}.conf
+            mode=0644
+  with_items:
+    - gc
+    - master
+    - monitor
+    - tracer
+    - tserver

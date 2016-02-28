@@ -1,6 +1,6 @@
 ---
 - name: Create cron script to initialize Accumulo follower
-  template: src=accumulo-follower-cron.j2
+  template: src=cron_failover/accumulo-follower-cron.j2
             dest=/usr/local/bin/accumulo-follower-cron
             owner=root
             group=root

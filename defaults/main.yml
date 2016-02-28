@@ -1,4 +1,12 @@
 ---
+## role 'accumulo'
+accumulo_version: "1.6.*"
+accumulo_mirror: "http://apache.mirrors.lucidnetworks.net"
+accumulo_conf_dir: "/etc/accumulo/conf"
+accumulo_log_dir: "/var/log/accumulo"
+accumulo_leader: False
+
+## role 'config'
 accumulo_secret: "secret"
 accumulo_leader_host: "localhost"
 accumulo_instance_name: "geowave-accumulo-cluster"
