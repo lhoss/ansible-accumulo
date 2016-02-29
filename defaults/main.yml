@@ -18,6 +18,8 @@ accumulo_parent_dir: /usr/lib
 accumulo_secret: "secret"
 accumulo_leader_host: "localhost"
 accumulo_instance_name: "geowave-accumulo-cluster"
+accumulo_trace_user: "root"
+accumulo_trace_password: "{{accumulo_secret}}"
 
 accumulo_user: "accumulo"
 accumulo_group: "accumulo"
