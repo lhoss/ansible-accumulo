@@ -2,7 +2,7 @@
 - name: Create service account for Accumulo
   user: name=accumulo
         system=yes
-        home=/var/lib/accumulo
+        home={{ accumulo_user_dir }}
         shell=/bin/false
         state=present
 
@@ -22,7 +22,8 @@
         state=directory
   with_items:
     - "{{ accumulo_log_dir }}/logs"
-    - "{{ accumulo_conf_dir }}"
+# below one is a symlink in the new 'distr' setup
+#    - "{{ accumulo_conf_dir }}"
 
 - name: Configure Accumulo service definitions
   template: src=services/accumulo-{{ item }}.conf.j2

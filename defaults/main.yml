@@ -1,10 +1,18 @@
 ---
 ## role 'accumulo'
-accumulo_version: "1.6.*"
+#accumulo_version: "1.6.*"
+accumulo_version: "1.7.0"
 accumulo_mirror: "http://apache.mirrors.lucidnetworks.net"
 accumulo_conf_dir: "/etc/accumulo/conf"
 accumulo_log_dir: "/var/log/accumulo"
+accumulo_user_dir: "/var/lib/accumulo"
 accumulo_leader: False
+
+## new 'accumulo-distr' vars
+accumulo_home: /usr/lib/accumulo
+accumulo_parent_dir: /usr/lib
+#accumulo_usr_orig_dir: {{accumulo_home}}
+
 
 ## role 'config'
 accumulo_secret: "secret"

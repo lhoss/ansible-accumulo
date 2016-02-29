@@ -1,0 +1,36 @@
+---
+## Check if OLD (deb based) accumulo was installed and uninstall it
+- stat: path=/usr/lib/accumulo
+  register: old_accumulo_exists
+
+- include: accumulo-deb-uninstall.yml
+  when: old_accumulo_exists.stat.isdir is defined and old_accumulo_exists.stat.isdir
+
+
+## Start new install
+- name: Make sure parent directory exists
+  file: path={{accumulo_parent_dir}} state=directory owner=root group=root mode=0755 follow=yes
+
+- name: Copy .tgz to {{accumulo_parent_dir}} and unpack it
+  unarchive: src=accumulo-{{accumulo_version}}-bin.tar.gz dest={{accumulo_parent_dir}} owner={{accumulo_user}} group={{accumulo_group}} mode=0755 creates="{{accumulo_home}}-{{accumulo_version}}"
+
+- name: Link accumulo version to {{accumulo_home}}
+  file: src={{accumulo_home}}-{{accumulo_version}} dest={{accumulo_home}} owner={{accumulo_user}} group={{accumulo_group}} state=link
+
+# TODO accumulo_conf_dir parent
+- name: Create folder /etc/accumulo
+  file: path=/etc/accumulo state=directory owner={{accumulo_user}} group={{accumulo_group}}
+
+- name: Create accumulo link for conf to /etc/accumulo
+  file: src={{accumulo_home}}/conf dest={{accumulo_conf_dir}} owner={{accumulo_user}} group={{accumulo_group}} state=link
+
+# Note: Q: Why the '/usr/bin/accumulo' symlink?
+# A: 1. why not! 2. it's the same symlink used by the original ansible (so it's easier to overwrite existing one)
+- name: Create link for accumulo to /usr/bin
+  file: src="{{accumulo_home}}/bin/accumulo" dest=/usr/bin/accumulo owner={{accumulo_user}} group={{accumulo_group}} mode=755 state=link
+
+#TODO check
+- name: Build Accumulo native libraries
+  command: "/usr/lib/accumulo/bin/build_native_library.sh"
+  args:
+    creates: "/usr/lib/accumulo/lib/native/libaccumulo.so"

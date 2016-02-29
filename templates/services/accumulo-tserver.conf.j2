@@ -2,7 +2,7 @@ description "accumulo tablet server"
 
 start on stopped rc RUNLEVEL=[2345]
 respawn
-setuid accumulo
-chdir /var/lib/accumulo
+setuid {{ accumulo_user }}
+chdir {{ accumulo_user_dir }}
 
-exec /usr/bin/accumulo tserver >>/var/log/accumulo/logs/tserver.out 2>>/var/log/accumulo/logs/tserver.err
+exec /usr/bin/accumulo tserver >>{{ accumulo_log_dir }}/logs/tserver.out 2>>{{ accumulo_log_dir }}/logs/tserver.err
