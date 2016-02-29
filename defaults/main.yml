@@ -1,4 +1,6 @@
 ---
+accumulo_trace_user: "root"
+accumulo_trace_password: "secret"
 accumulo_secret: "secret"
 accumulo_leader_host: "localhost"
 accumulo_instance_name: "geowave-accumulo-cluster"
