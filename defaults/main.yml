@@ -1,9 +1,9 @@
 ---
-accumulo_trace_user: "root"
-accumulo_trace_password: "secret"
 accumulo_secret: "secret"
 accumulo_leader_host: "localhost"
 accumulo_instance_name: "geowave-accumulo-cluster"
+accumulo_trace_user: "root"
+accumulo_trace_password: "{{accumulo_secret}}"
 
 ## Added 2 new variables to allow deploying a more customized hadoop environment
 hadoop_home: /usr/lib/hadoop
