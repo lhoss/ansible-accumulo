@@ -8,8 +8,12 @@
 
 - include: accumulo-1-5.yml
   when: accumulo_version | version_compare('1.6', '<')
+
 - include: accumulo-1-6.yml
-  when: accumulo_version | version_compare('1.6', '>=')
+  when: accumulo_version | version_compare('1.6.2', '<=') and accumulo_version|version_compare('1.6.0', '>=')
+
+- include: accumulo-distr.yml
+  when: accumulo_version | version_compare('1.6.2', '>')
 
 - name: Ensure Accumulo directories are owned by Accumulo user
   file: path={{ item }}

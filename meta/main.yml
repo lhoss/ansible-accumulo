@@ -23,5 +23,8 @@ galaxy_info:
   categories:
    - database:nosql
 
-#dependencies:
+dependencies:
 #  - { role: "azavea.accumulo" }
+  - { role: "azavea.java" }
+# below is required to 'Build Accumulo native libraries'
+  - { role: "azavea.build-essential" }
