@@ -1,9 +1,9 @@
 ---
 - name: Create service account for Accumulo
-  user: name=accumulo
+  user: name={{ accumulo_user }}
         system=yes
         home={{ accumulo_user_dir }}
-        shell=/bin/false
+        shell={{ accumulo_user_shell }}
         state=present
 
 - include: accumulo-1-5.yml
@@ -17,7 +17,7 @@
 
 - name: Ensure Accumulo directories are owned by Accumulo user
   file: path={{ item }}
-        owner=accumulo
+        owner={{ accumulo_user }}
         mode=0755
         state=directory
   with_items:

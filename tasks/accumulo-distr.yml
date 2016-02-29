@@ -17,9 +17,8 @@
 - name: Link accumulo version to {{accumulo_home}}
   file: src={{accumulo_home}}-{{accumulo_version}} dest={{accumulo_home}} owner={{accumulo_user}} group={{accumulo_group}} state=link
 
-# TODO accumulo_conf_dir parent
-- name: Create folder /etc/accumulo
-  file: path=/etc/accumulo state=directory owner={{accumulo_user}} group={{accumulo_group}}
+- name: Create folder {{accumulo_conf_dir | dirname}}
+  file: path={{accumulo_conf_dir | dirname}} state=directory owner={{accumulo_user}} group={{accumulo_group}}
 
 - name: Create accumulo link for conf to /etc/accumulo
   file: src={{accumulo_home}}/conf dest={{accumulo_conf_dir}} owner={{accumulo_user}} group={{accumulo_group}} state=link
@@ -29,8 +28,7 @@
 - name: Create link for accumulo to /usr/bin
   file: src="{{accumulo_home}}/bin/accumulo" dest=/usr/bin/accumulo owner={{accumulo_user}} group={{accumulo_group}} mode=755 state=link
 
-#TODO check
 - name: Build Accumulo native libraries
-  command: "/usr/lib/accumulo/bin/build_native_library.sh"
+  command: "{{accumulo_home}}/bin/build_native_library.sh"
   args:
-    creates: "/usr/lib/accumulo/lib/native/libaccumulo.so"
+    creates: "{{accumulo_home}}/lib/native/libaccumulo.so"
