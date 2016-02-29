@@ -26,12 +26,13 @@
 #    - "{{ accumulo_conf_dir }}"
 
 - name: Configure Accumulo service definitions
-  template: src=services/accumulo-{{ item }}.conf.j2
-            dest=/etc/init/accumulo-{{ item }}.conf
+#  template: src=services/accumulo-{{ item.name }}.conf.j2
+  template: src=services/accumulo-upstart-template.conf.j2
+            dest=/etc/init/accumulo-{{ item.name }}.conf
             mode=0644
   with_items:
-    - gc
-    - master
-    - monitor
-    - tracer
-    - tserver
+    - { name: "gc"}
+    - { name: "master"}
+    - { name: "monitor", args: "--address 0.0.0.0" }
+    - { name: "tracer"}
+    - { name: "tserver"}
