@@ -1,7 +1,7 @@
 ---
-## role 'accumulo'
+## role 'accumulo'  (original role azavea.accumulo)
 #accumulo_version: "1.6.*"
-accumulo_version: "1.7.0"
+accumulo_version: "1.7.1"
 accumulo_mirror: "http://apache.mirrors.lucidnetworks.net"
 accumulo_conf_dir: "/etc/accumulo/conf"
 accumulo_log_dir: "/var/log/accumulo"
@@ -14,7 +14,7 @@ accumulo_parent_dir: /usr/lib
 #accumulo_usr_orig_dir: {{accumulo_home}}
 
 
-## role 'config'
+## role 'config' (original role stumptownlabs.accumulo)
 accumulo_secret: "secret"
 accumulo_leader_host: "localhost"
 accumulo_instance_name: "geowave-accumulo-cluster"
