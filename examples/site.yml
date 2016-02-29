@@ -9,6 +9,10 @@
       apt: update_cache=yes
 
   roles:
+# Added following azavea role here (instead of a role dependencies), as we use a different 'java' role
+    - { role: "azavea.java" }
+# below is required to 'Build Accumulo native libraries'
+#    - { role: "azavea.build-essential" }
 #    - { role: "azavea.accumulo" }
     - { role: "lhoss.accumulo"
 #        , accumulo_leader: True
