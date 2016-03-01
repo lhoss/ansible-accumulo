@@ -1,6 +1,7 @@
 ---
 - name: Create service account for Accumulo
   user: name={{ accumulo_user }}
+        group={{ accumulo_group }}
         system=yes
         home={{ accumulo_user_dir }}
         shell={{ accumulo_user_shell }}

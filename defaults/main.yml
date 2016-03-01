@@ -31,5 +31,9 @@ zookeeper_servers:
  - { ip: "{{accumulo_leader_host}}" }
 
 ## Added 2 new variables to allow deploying a more customized hadoop environment
-hadoop_home: /usr/lib/hadoop
+#accumulo_java_home: "{{java_home}}"
+accumulo_java_home: /usr/lib/jvm/java-7-openjdk-amd64
+accumulo_zookeeper_home: /usr/lib/zookeeper
+accumulo_hadoop_home: /usr/lib/hadoop
+
 hdfs_root_user: "hdfs"

@@ -1,7 +1,8 @@
 ---
 ## Note: With setting the group to hadoop, the deployment script expects the accumulo user having
 ## full permissions to write on 'hdfs'  (to create a new top-level folder below, during init step)
-## TODO This task only works on servers that have an OS-group 'hadoop' providing hdfs superuser rights.
+## Update: Using a workaround now, using a separate task to create the accumulo dir as 'hdfs' user
+#
 #- name: Add Accumulo user to HDFS supergroup
 #  user: name={{ accumulo_user }}
 #        append=yes
@@ -27,17 +28,32 @@
         dest="{{ accumulo_conf_dir }}/masters"
         mode=0644
 
-## Tried to use 'bash -lc' so that 'hdfs' cmd was found in the PATH when using 'sudo'
+## Note: below hdfs cmds only works using 'bash -lc' (only a login shell, reads /etc/profile scripts!)
+## Details see: https://github.com/ansible/ansible/issues/4854
 - name: Check if accumulo has been initialized
   shell: bash -lc 'hdfs dfs -test -d /accumulo'
-  register: hdfs_files
+  register: hdfs_inited
   ignore_errors: yes
 
+- debug: var=hdfs_inited
+
+## Note: Instead of 'manually' creating this folder, we could also add 'accumulo' to the hadoop 'admins' group
+- name: Initialize Accumulo HDFS folder (as hdfs'root user)
+  sudo_user: "{{ hdfs_root_user }}"
+#  shell: "hdfs dfs -mkdir /accumulo &&  hdfs dfs -chown {{ accumulo_user }}:{{ accumulo_group }} /accumulo"
+  shell: bash -lc 'hdfs dfs -mkdir /accumulo &&  hdfs dfs -chown {{ accumulo_user }}:{{ accumulo_group }} /accumulo'
+  register: hdfs_dir_created
+  when: "hdfs_inited.rc == 1"
+
+- debug: var=hdfs_dir_created.rc
+
+## Also below: if we would use 'bash -lc' we could use the System ENV Vars in accumulo-env.sh
+## Anyway: The work of setting usable defaults, was done already
 - name: Initialize Accumulo Leader
   sudo_user: "{{ accumulo_user }}"
   command: "accumulo init --instance-name {{ accumulo_instance_name }} --password {{ accumulo_secret }}"
-  when: "hdfs_files.rc == 1"
-
+#  when: "hdfs_inited.rc == 1"
+  when: hdfs_dir_created is defined and hdfs_dir_created.rc == 0
 
 ## Preferred to set state=restarted so that services are restarted for a 'config update' only run
 - name: Restart Accumulo Server Master (all services)
