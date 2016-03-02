@@ -48,15 +48,17 @@ then
    POLICY="-Djava.security.manager -Djava.security.policy=${ACCUMULO_CONF_DIR}/accumulo.policy"
 fi
 ## Orig settings: -Xmx1g -Xms1g -XX:NewSize=500m -XX:MaxNewSize=500m
-test -z "$ACCUMULO_TSERVER_OPTS" && export ACCUMULO_TSERVER_OPTS="${POLICY} -Xmx6g -Xms6g"
+test -z "$ACCUMULO_TSERVER_OPTS" && export ACCUMULO_TSERVER_OPTS="${POLICY} {{accumulo_opts_tserver}}"
 ## Orig settings: -Xmx1g -Xms1g
-test -z "$ACCUMULO_MASTER_OPTS"  && export ACCUMULO_MASTER_OPTS="${POLICY} -Xmx4g -Xms2g"
-test -z "$ACCUMULO_MONITOR_OPTS" && export ACCUMULO_MONITOR_OPTS="${POLICY} -Xmx1g -Xms256m"
-test -z "$ACCUMULO_GC_OPTS"      && export ACCUMULO_GC_OPTS="-Xmx256m -Xms256m"
-test -z "$ACCUMULO_GENERAL_OPTS" && export ACCUMULO_GENERAL_OPTS="-XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -Djava.net.preferIPv4Stack=true"
-test -z "$ACCUMULO_OTHER_OPTS"   && export ACCUMULO_OTHER_OPTS="-Xmx1g -Xms256m"
+test -z "$ACCUMULO_MASTER_OPTS"  && export ACCUMULO_MASTER_OPTS="${POLICY} {{accumulo_opts_master}}"
+test -z "$ACCUMULO_MONITOR_OPTS" && export ACCUMULO_MONITOR_OPTS="${POLICY} {{accumulo_opts_monitor}}"
+test -z "$ACCUMULO_GC_OPTS"      && export ACCUMULO_GC_OPTS="{{accumulo_opts_gc}}"
+test -z "$ACCUMULO_GENERAL_OPTS" && export ACCUMULO_GENERAL_OPTS="{{accumulo_opts_general}}"
+test -z "$ACCUMULO_OTHER_OPTS"   && export ACCUMULO_OTHER_OPTS="{{accumulo_opts_other}}"
 # what do when the JVM runs out of heap memory
 export ACCUMULO_KILL_CMD='kill -9 %p'
 
 # Should the monitor bind to all network interfaces -- default: false
 export ACCUMULO_MONITOR_BIND_ALL="true"
+
+

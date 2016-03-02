@@ -6,15 +6,15 @@ accumulo_mirror: "http://apache.mirrors.lucidnetworks.net"
 accumulo_conf_dir: "/etc/accumulo/conf"
 accumulo_log_dir: "/var/log/accumulo"
 accumulo_user_dir: "/var/lib/accumulo"
+
+#TODO set the leader  IFF ansible_host part of group accumulo_master:
 accumulo_leader: False
 
-## new 'accumulo-distr' vars
+## 'accumulo-distr.yml' include vars
 accumulo_home: /usr/lib/accumulo
 accumulo_parent_dir: /usr/lib
-#accumulo_usr_orig_dir: {{accumulo_home}}
 
-
-## role 'config' (original role stumptownlabs.accumulo)
+## 'config.yml' include vars (original role stumptownlabs.accumulo)
 accumulo_secret: "secret"
 accumulo_leader_host: "localhost"
 accumulo_instance_name: "geowave-accumulo-cluster"
@@ -26,14 +26,24 @@ accumulo_group: "accumulo"
 accumulo_user_shell: "/bin/false"
 accumulo_cron_failover: false
 
-## Requires in accumulo-site.xml
+## config vars required in accumulo-site.xml
 zookeeper_servers:
  - { ip: "{{accumulo_leader_host}}" }
+hdfs_root_user: "hdfs"
 
-## Added 2 new variables to allow deploying a more customized hadoop environment
+## config vars required in accumulo-env.sh.j2
 #accumulo_java_home: "{{java_home}}"
 accumulo_java_home: /usr/lib/jvm/java-7-openjdk-amd64
+# Following variable must be set to the folder that contains the zookeeper 'jar':
+#$ZOOKEEPER_HOME/zookeeper[^.].*.jar,
+#libzookeeper-java: /usr/share/java/zookeeper.jar
+#accumulo_zookeeper_home: /usr/share/java
 accumulo_zookeeper_home: /usr/lib/zookeeper
-accumulo_hadoop_home: /usr/lib/hadoop
 
-hdfs_root_user: "hdfs"
+accumulo_hadoop_home: /usr/lib/hadoop
+accumulo_opts_tserver: "-Xmx6g -Xms6g"
+accumulo_opts_master:  "-Xmx4g -Xms2g"
+accumulo_opts_monitor: "-Xmx1g -Xms256m"
+accumulo_opts_gc:      "-Xmx256m -Xms256m"
+accumulo_opts_general: "-XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -Djava.net.preferIPv4Stack=true"
+accumulo_opts_other:   "-Xmx1g -Xms256m"
