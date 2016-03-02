@@ -8,7 +8,9 @@ accumulo_log_dir: "/var/log/accumulo"
 accumulo_user_dir: "/var/lib/accumulo"
 
 #TODO set the leader  IFF ansible_host part of group accumulo_master:
-accumulo_leader: False
+#accumulo_leader: False
+accumulo_leader: "{{inventory_hostname in groups.accumulo_master}}"
+accumulo_leader_host: "{{groups.accumulo_master[0]}}"
 
 ## 'accumulo-distr.yml' include vars
 accumulo_home: /usr/lib/accumulo

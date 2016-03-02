@@ -1,4 +1,7 @@
 ---
+#accumulo_leader={{inventory_hostname in groups.accumulo_master}}
+- debug: msg="Accumulo setup started with accumulo_leader={{accumulo_leader}}"
+
 - include: install.yml
   tags: install
 
