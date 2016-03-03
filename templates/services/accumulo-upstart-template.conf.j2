@@ -5,4 +5,4 @@ respawn
 setuid {{ accumulo_user }}
 chdir {{ accumulo_user_dir }}
 
-exec /usr/bin/accumulo {{item.name}} {{item.args|default(omit)}} >>{{ accumulo_log_dir }}/logs/{{item.name}}.out 2>>{{ accumulo_log_dir }}/logs/{{item.name}}.err
+exec /usr/bin/accumulo {{item.name}} {{item.args|default('')}} >>{{ accumulo_log_dir }}/logs/{{item.name}}.out 2>>{{ accumulo_log_dir }}/logs/{{item.name}}.err

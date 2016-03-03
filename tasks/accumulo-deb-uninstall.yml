@@ -1,5 +1,4 @@
 ---
-
 # need to make sure any existing 'deb' based accumulo is uninstalled
 - name: Uninstall Accumulo pkg (if exists)
   apt: pkg=accumulo state=absent
@@ -7,9 +6,6 @@
 - name: Uninstall old native lib
 #  file: path="/usr/lib/accumulo/lib/native/libaccumulo.so" state=absent
   file: path="/usr/lib/accumulo/lib" state=absent
-  #recurse=yes
-
-## remove other traces
 
 # below tasks should only be done, in case the 'deb' package was removed in this run
 - name: Uninstall old logs symlink lib

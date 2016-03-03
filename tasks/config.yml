@@ -48,5 +48,3 @@
   with_items:
     - "accumulo-tserver"
   when: accumulo_leader == False
-
-##Note: was not required to have even the conf/slaves file, see: http://accumulo.apache.org/1.6/accumulo_user_manual.html#_cluster_specification

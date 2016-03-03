@@ -10,6 +10,6 @@
   cron: name="accumulo-follower"
         minute="*/1"
         user="root"
-        job="/usr/local/bin/accumulo-follower-cron >> /var/log/accumulo-follower-cron.log 2>&1"
+        job="/usr/local/bin/accumulo-follower-cron >> {{accumulo_log_dir}}/accumulo-follower-cron.log 2>&1"
         cron_file="accumulo-follower"
         state=present

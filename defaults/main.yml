@@ -1,16 +1,15 @@
 ---
 ## role 'accumulo'  (original role azavea.accumulo)
+#accumulo_leader: False
+accumulo_leader: "{{inventory_hostname in groups.accumulo_master}}"
+accumulo_leader_host: "{{groups.accumulo_master[0]}}"
+
 #accumulo_version: "1.6.*"
 accumulo_version: "1.7.1"
 accumulo_mirror: "http://apache.mirrors.lucidnetworks.net"
 accumulo_conf_dir: "/etc/accumulo/conf"
 accumulo_log_dir: "/var/log/accumulo"
 accumulo_user_dir: "/var/lib/accumulo"
-
-#TODO set the leader  IFF ansible_host part of group accumulo_master:
-#accumulo_leader: False
-accumulo_leader: "{{inventory_hostname in groups.accumulo_master}}"
-accumulo_leader_host: "{{groups.accumulo_master[0]}}"
 
 ## 'accumulo-distr.yml' include vars
 accumulo_home: /usr/lib/accumulo
@@ -20,7 +19,6 @@ accumulo_parent_dir: /usr/lib
 accumulo_initialize: True
 
 accumulo_secret: "secret"
-accumulo_leader_host: "localhost"
 accumulo_instance_name: "geowave-accumulo-cluster"
 accumulo_trace_user: "root"
 accumulo_trace_password: "{{accumulo_secret}}"
@@ -43,10 +41,10 @@ accumulo_java_home: /usr/lib/jvm/java-7-openjdk-amd64
 #libzookeeper-java: /usr/share/java/zookeeper.jar
 #accumulo_zookeeper_home: /usr/share/java
 accumulo_zookeeper_home: /usr/lib/zookeeper
-
 accumulo_hadoop_home: /usr/lib/hadoop
-accumulo_opts_tserver: "-Xmx6g -Xms6g"
-accumulo_opts_master:  "-Xmx4g -Xms2g"
+
+accumulo_opts_tserver: "-Xmx1g -Xms1g -XX:NewSize=500m -XX:MaxNewSize=500m"
+accumulo_opts_master:  "-Xmx1g -Xms1g"
 accumulo_opts_monitor: "-Xmx1g -Xms256m"
 accumulo_opts_gc:      "-Xmx256m -Xms256m"
 accumulo_opts_general: "-XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -Djava.net.preferIPv4Stack=true"
