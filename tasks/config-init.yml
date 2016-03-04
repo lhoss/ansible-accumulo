@@ -14,14 +14,14 @@
   sudo_user: "{{ hdfs_root_user }}"
   shell: bash -lc 'hdfs dfs -mkdir /accumulo &&  hdfs dfs -chown {{ accumulo_user }}:{{ accumulo_group }} /accumulo'
   register: hdfs_dir_created
-  when: "hdfs_inited.rc == 1"
+  when: hdfs_inited is defined and hdfs_inited.rc==1
 
 - debug: var=hdfs_dir_created.rc
 
 ## Also below: if we would use 'bash -lc' we could use the System ENV Vars in accumulo-env.sh
 ## Anyway: The work of setting usable defaults, was done already
-- name: Initialize Accumulo Leader
+- name: "Initialize Accumulo Leader (if task hangs, the init cmd is probably waiting for user-input!)"
   sudo_user: "{{ accumulo_user }}"
   command: "accumulo init --instance-name {{ accumulo_instance_name }} --password {{ accumulo_secret }}"
 #  when: "hdfs_inited.rc == 1"
-  when: hdfs_dir_created is defined and hdfs_dir_created.rc == 0
+  when: hdfs_dir_created is defined and hdfs_dir_created.rc==0
