@@ -25,7 +25,7 @@
      <param name="File"           value="${org.apache.accumulo.core.dir.log}/${org.apache.accumulo.core.application}_${org.apache.accumulo.core.ip.localhost.hostname}.debug.log"/>
      <param name="MaxFileSize"    value="1000MB"/>
      <param name="MaxBackupIndex" value="10"/>
-     <param name="Threshold"      value="INFO"/>
+     <param name="Threshold"      value="{{accumulo_log_minLevel}}"/>
      <layout class="org.apache.log4j.PatternLayout">
        <param name="ConversionPattern" value="%d{ISO8601} [%-8c{2}] %-5p: %m%n"/>
      </layout>
@@ -36,7 +36,7 @@
      <param name="File"           value="${org.apache.accumulo.core.dir.log}/${org.apache.accumulo.core.application}_${org.apache.accumulo.core.ip.localhost.hostname}.log"/>
      <param name="MaxFileSize"    value="1000MB"/>
      <param name="MaxBackupIndex" value="10"/>
-     <param name="Threshold"      value="INFO"/>
+     <param name="Threshold"      value="{{accumulo_log_minLevel}}"/>
      <layout class="org.apache.log4j.PatternLayout">
        <param name="ConversionPattern" value="%d{ISO8601} [%-8c{2}] %-5p: %m%n"/>
      </layout>
@@ -57,7 +57,7 @@
 
   <!-- Log accumulo events to the debug, normal and remote logs. -->
   <logger name="org.apache.accumulo" additivity="false">
-     <level value="INFO"/>
+     <level value="{{accumulo_log_minLevel}}"/>
      <appender-ref ref="A2" />
      <appender-ref ref="A3" />
      <appender-ref ref="ASYNC" />
@@ -68,7 +68,7 @@
   </logger>
 
   <logger name="org.apache.accumulo.core.file.rfile.bcfile">
-     <level value="INFO"/>
+     <level value="{{accumulo_log_minLevel}}"/>
   </logger>
 
   <logger name="org.mortbay.log">
@@ -81,7 +81,7 @@
 
   <!-- Log non-accumulo events to the debug and normal logs. -->
   <root>
-     <level value="INFO"/>
+     <level value="{{accumulo_log_minLevel}}"/>
      <appender-ref ref="A2" />
      <appender-ref ref="A3" />
   </root>
