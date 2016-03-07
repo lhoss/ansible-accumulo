@@ -1,15 +1,10 @@
 ---
-## Check if OLD (deb based) accumulo was installed and uninstall it
-- stat: path=/usr/lib/accumulo
-  register: old_accumulo_exists
-  tags: uninstall
 
-- include: accumulo-deb-uninstall.yml
-  when: old_accumulo_exists.stat.isdir is defined and old_accumulo_exists.stat.isdir
-  tags: uninstall
+# call uninstall with check
+- include: accumulo-deb-uninstall-with-check.yml
 
 
-## Start new install
+## 2. Start new install
 - name: Make sure parent directory exists
   file: path={{accumulo_parent_dir}} state=directory owner=root group=root mode=0755 follow=yes
 
