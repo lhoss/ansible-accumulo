@@ -1,4 +1,22 @@
 ---
+# before uninstall ensure services are stopped+disabled
+- name: ensure Accumulo Master services) are disabled and stopped
+  service: name={{ item }} enabled=no state=stopped
+  with_items:
+    - "accumulo-master"
+    - "accumulo-monitor"
+    - "accumulo-gc"
+    - "accumulo-tracer"
+    - "accumulo-tserver"
+  when: accumulo_leader == True
+
+- name: ensure Accumulo Follower services (tserver) are enabled and (re)started
+  service: name={{ item }} enabled=no state=stopped
+  with_items:
+    - "accumulo-tserver"
+  when: accumulo_leader == False
+
+
 # need to make sure any existing 'deb' based accumulo is uninstalled
 - name: Uninstall Accumulo pkg (if exists)
   apt: pkg=accumulo state=absent

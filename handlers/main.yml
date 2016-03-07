@@ -17,4 +17,4 @@
 
 - name: Restart Accumulo Tablet Server
   service: name=accumulo-tserver state=restarted
-  when: not accumulo_leader
+#  when: not accumulo_leader

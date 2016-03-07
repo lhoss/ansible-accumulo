@@ -30,10 +30,11 @@
 
 - include: config-init.yml
   when: accumulo_initialize
+  tags: config-init
 
 
 ## Preferred to set state=restarted so that services are restarted for a 'config update' only run
-- name: Restart Accumulo Server Master (all services)
+- name: ensure Accumulo Master services) are enabled and (re)started
   service: name={{ item }} enabled=yes state=restarted
   with_items:
     - "accumulo-master"
@@ -42,9 +43,11 @@
     - "accumulo-tracer"
     - "accumulo-tserver"
   when: accumulo_leader == True
+  tags: service-init
 
-- name: Restart Accumulo Follower (tserver only)
+- name: ensure Accumulo Follower services (tserver) are enabled and (re)started
   service: name={{ item }} enabled=yes state=restarted
   with_items:
     - "accumulo-tserver"
   when: accumulo_leader == False
+  tags: service-init
