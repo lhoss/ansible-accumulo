@@ -1,0 +1,47 @@
+---
+- name: Configure Accumulo
+  template: src={{ item }}.j2
+            dest={{ accumulo_conf_dir }}/{{ item }}
+            owner={{ accumulo_user }}
+            group={{ accumulo_group }}
+            mode=0644
+  with_items:
+    - accumulo-env.sh
+    - accumulo-metrics.xml
+    - accumulo-site.xml
+    - generic_logger.xml
+    - log4j.properties
+    - monitor_logger.xml
+  notify:
+     - Restart Accumulo Master
+     - Restart Accumulo Monitor
+     - Restart Accumulo Tracer
+     - Restart Accumulo Garbage Collector
+     - Restart Accumulo Tablet Server
+
+- name: Set master for Accumulo followers
+  copy: content="{{ accumulo_leader_host }}"
+        dest="{{ accumulo_conf_dir }}/masters"
+        mode=0644
+
+- include: config-init.yml
+  when: accumulo_initialize
+  tags: config-init
+
+- name: Register Accumulo Master services
+  service: name={{ item }} enabled=yes
+  with_items:
+    - "accumulo-master"
+    - "accumulo-monitor"
+    - "accumulo-gc"
+    - "accumulo-tracer"
+    - "accumulo-tserver"
+  when: accumulo_leader == True
+  tags: service-init
+
+- name: Register Accumulo Follower services (tserver)
+  service: name={{ item }} enabled=yes
+  with_items:
+    - "accumulo-tserver"
+  when: accumulo_leader == False
+  tags: service-init

@@ -1,0 +1,13 @@
+
+## AFAIU The idea of the override files is that the services are *not* started automatically
+## at the end of the ansible deployment, but only once the cron scheduled scripts below are run
+- name: Create service definition overrides
+  copy: content="manual"
+        dest=/etc/init/accumulo-{{ item }}.override
+        mode=0644
+  with_items:
+    - gc
+    - master
+    - monitor
+    - tracer
+    - tserver

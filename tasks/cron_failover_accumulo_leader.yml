@@ -1,6 +1,6 @@
 ---
 - name: Create cron script to initialize Accumulo leader
-  template: src=accumulo-leader-cron.j2
+  template: src=cron_failover/accumulo-leader-cron.j2
             dest=/usr/local/bin/accumulo-leader-cron
             owner=root
             group=root

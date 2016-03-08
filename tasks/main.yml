@@ -1,83 +1,21 @@
 ---
-## Note: With setting the group to hadoop, the deployment script expects the accumulo user having
-## full permissions to write on 'hdfs'  (to create a new top-level folder below, during init step)
-## TODO This task only works on servers that have an OS-group 'hadoop' providing hdfs superuser rights.
-- name: Add Accumulo user to HDFS supergroup
-  user: name=accumulo
-        append=yes
-        group=hadoop
-        state=present
+- debug: msg="Accumulo setup started with accumulo_leader={{accumulo_leader}}"
 
-## AFAIU The idea of the override files is that the services are *not* started automatically
-## at the end the ansible deployment.. but only when the cron scheduled scripts below  are run
-## Note also: Once any accumulo service was started below, the override file(s) were gone !
-- name: Create service definition overrides
-  copy: content="manual"
-        dest=/etc/init/accumulo-{{ item }}.override
-        mode=0644
-  with_items:
-    - gc
-    - master
-    - monitor
-    - tracer
-    - tserver
+- include: install.yml
+  tags: install
 
-- name: Configure Accumulo
-  template: src={{ item }}.j2
-            dest={{ accumulo_conf_dir }}/{{ item }}
-            owner=accumulo
-            group=root
-            mode=0644
-  with_items:
-    - accumulo-env.sh
-    - accumulo-metrics.xml
-    - accumulo-site.xml
-    - generic_logger.xml
-    - log4j.properties
-    - monitor_logger.xml
+- include: cron_failover_config_services_overrides.yml
+  when: accumulo_cron_failover
+  tags: [cron_failover,config]
 
-- name: Set master for Accumulo followers
-  copy: content="{{ accumulo_leader_host }}"
-        dest="{{ accumulo_conf_dir }}/masters"
-        mode=0644
-
-## Tried to use 'bash -lc' so that 'hdfs' cmd was found in the PATH when using 'sudo'
-- name: Check if accumulo has been initialized
-  shell: bash -lc 'hdfs dfs -test -d /accumulo'
-  register: hdfs_files
-  ignore_errors: yes
-
-- name: Initialize Accumulo Leader
-  sudo_user: accumulo
-  command: "accumulo init --instance-name {{ accumulo_instance_name }} --password {{ accumulo_secret }}"
-  when: "hdfs_files.rc == 1"
+- include: config.yml
+  tags: config
 
 
-## Preferred to set state=restarted so that services are restarted for a 'config update' only run
-- name: Restart Accumulo Server Master (all services)
-  service: name={{ item }} enabled=yes state=restarted
-  with_items:
-    - "accumulo-master"
-    - "accumulo-monitor"
-    - "accumulo-gc"
-    - "accumulo-tracer"
-    - "accumulo-tserver"
-  when: accumulo_leader == True
+- include: cron_failover_accumulo_leader.yml
+  when: accumulo_cron_failover and  accumulo_leader == True
+  tags: cron_failover
 
-- name: Restart Accumulo Follower (tserver only)
-  service: name={{ item }} enabled=yes state=restarted
-  with_items:
-    - "accumulo-tserver"
-  when: accumulo_leader == False
-
-## Initially I added below 2 tasks for the functionality that seemed to be a 'failover' try using cron.
-## To use it, uncomment (note: that the task includes existed already, but not below 2 tasks):
-- include: configure_accumulo_leader.yml
-  when: accumulo_leader == True
-  tags: failover_cronjob
-
-- include: configure_accumulo_follower.yml
-  when: accumulo_leader == False
-  tags: failover_cronjob
-
-##Note: was not required to have even the conf/slaves file, see: http://accumulo.apache.org/1.6/accumulo_user_manual.html#_cluster_specification
+- include: cron_failover_accumulo_follower.yml
+  when: accumulo_cron_failover and  accumulo_leader == False
+  tags: cron_failover

@@ -1,0 +1,13 @@
+---
+- hosts: all
+
+  vars:
+    java_version: "7u95-*"
+
+  pre_tasks:
+    - name: Update APT cache
+      apt: update_cache=yes
+
+  roles:
+    - { role: "azavea.java" }
+    - { role: "lhoss.accumulo" }
