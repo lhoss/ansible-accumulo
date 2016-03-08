@@ -6,12 +6,9 @@
         shell={{ accumulo_user_shell }}
         state=present
 
-- include: accumulo-1-6.yml
-  when: accumulo_version | version_compare('1.6.3', '<') and accumulo_version|version_compare('1.6.0', '>=')
-
 - include: accumulo-distr.yml
-  when: accumulo_version | version_compare('1.6.3', '>')
 
+# TODO check the 'logs' dir makes sense
 - name: Ensure Accumulo directories are owned by Accumulo user
   file: path={{ item }}
         owner={{ accumulo_user }}
