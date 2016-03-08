@@ -33,7 +33,6 @@ Variables with sane defaults:
 - `accumulo_user` - the accumulo user (default: `accumulo` )
 - `accumulo_group` - the accumulo group (default: `accumulo` ). Note: if `accumulo_group != accumulo_user`, you must ensure that group exists.
 - `accumulo_user_shell` - the user's shell (default (`/bin/false` )
-- `accumulo_cron_failover` - (default: `false`). If `true` an experimental cron-scripts based failover mechanism is installed (originally taken from `stumptownlabs.accumulo` role)
 
 
 Settings depending on external dependencies (Zookeeper, HDFS, Java):

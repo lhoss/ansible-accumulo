@@ -24,9 +24,6 @@
         dest="{{ accumulo_conf_dir }}/masters"
         mode=0644
 
-- include: config-init.yml
-  when: accumulo_initialize
-  tags: config-init
 
 - name: Register Accumulo Master services
   service: name={{ item }} enabled=yes

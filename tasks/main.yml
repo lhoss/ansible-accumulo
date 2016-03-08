@@ -4,18 +4,9 @@
 - include: install.yml
   tags: install
 
-- include: cron_failover_config_services_overrides.yml
-  when: accumulo_cron_failover
-  tags: [cron_failover,config]
-
 - include: config.yml
   tags: config
 
-
-- include: cron_failover_accumulo_leader.yml
-  when: accumulo_cron_failover and  accumulo_leader == True
-  tags: cron_failover
-
-- include: cron_failover_accumulo_follower.yml
-  when: accumulo_cron_failover and  accumulo_leader == False
-  tags: cron_failover
+- include: initialize.yml
+  when: accumulo_initialize
+  tags: initialize
