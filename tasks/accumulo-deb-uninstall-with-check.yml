@@ -1,13 +1,5 @@
 ---
 ## 1. Check if OLD (deb based) accumulo was installed and uninstall it
-
-# following did NOT work, as dpkg -l returned pkg infos despite 'accumulo' was no more installed
-#- name: Check if accumulo deb is installed
-#  command: dpkg-query -l accumulo
-#  register: deb_check
-#  always_run: true
-#- debug: var=deb_check
-
 - name: Check if accumulo deb is installed
   command: apt-cache policy accumulo
   register: aptcache_check
@@ -20,9 +12,6 @@
 - set_fact:
     aptpkg_exists: "{{ aptcache_check.stdout | search('Installed: [0-9]') }}"
   tags: uninstall
-
-#- debug: var=aptpkg_exists
-#  tags: uninstall
 
 
 # 2. uninstall only if deb-based accumulo packages were found (which are assumed to be latest of v1.6.2)

@@ -1,14 +1,4 @@
 ---
-## Note: With setting the group to hadoop, the deployment script expects the accumulo user having
-## full permissions to write on 'hdfs'  (to create a new top-level folder below, during init step)
-## Update: Using a workaround now, using a separate task to create the accumulo dir as 'hdfs' user
-#
-#- name: Add Accumulo user to HDFS supergroup
-#  user: name={{ accumulo_user }}
-#        append=yes
-#        group=hadoop
-#        state=present
-
 - name: Configure Accumulo
   template: src={{ item }}.j2
             dest={{ accumulo_conf_dir }}/{{ item }}
@@ -22,6 +12,12 @@
     - generic_logger.xml
     - log4j.properties
     - monitor_logger.xml
+  notify:
+     - Restart Accumulo Master
+     - Restart Accumulo Monitor
+     - Restart Accumulo Tracer
+     - Restart Accumulo Garbage Collector
+     - Restart Accumulo Tablet Server
 
 - name: Set master for Accumulo followers
   copy: content="{{ accumulo_leader_host }}"
@@ -32,10 +28,8 @@
   when: accumulo_initialize
   tags: config-init
 
-
-## Preferred to set state=restarted so that services are restarted for a 'config update' only run
-- name: ensure Accumulo Master services) are enabled and (re)started
-  service: name={{ item }} enabled=yes state=restarted
+- name: Register Accumulo Master services
+  service: name={{ item }} enabled=yes
   with_items:
     - "accumulo-master"
     - "accumulo-monitor"
@@ -45,8 +39,8 @@
   when: accumulo_leader == True
   tags: service-init
 
-- name: ensure Accumulo Follower services (tserver) are enabled and (re)started
-  service: name={{ item }} enabled=yes state=restarted
+- name: Register Accumulo Follower services (tserver)
+  service: name={{ item }} enabled=yes
   with_items:
     - "accumulo-tserver"
   when: accumulo_leader == False

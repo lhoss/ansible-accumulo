@@ -21,8 +21,7 @@
 - name: Uninstall Accumulo pkg (if exists)
   apt: pkg=accumulo state=absent
 
-- name: Uninstall old native lib
-#  file: path="/usr/lib/accumulo/lib/native/libaccumulo.so" state=absent
+- name: Uninstall old native lib (incl. 2 parent dirs)
   file: path="/usr/lib/accumulo/lib" state=absent
 
 # below tasks should only be done, in case the 'deb' package was removed in this run
@@ -31,9 +30,6 @@
 
 - name: Uninstall old accumulo parent dir
   file: path="/usr/lib/accumulo" state=absent  recurse=no
-
-#- name: Uninstall old logs symlink lib
-#  file: path="/etc/accumulo/conf" state=absent  recurse=no
 
 # rename the 'conf' dir only if it's a dir not a symlink (like for non-deb installs)
 - stat: path=/etc/accumulo/conf

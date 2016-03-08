@@ -5,8 +5,6 @@
         home={{ accumulo_user_dir }}
         shell={{ accumulo_user_shell }}
         state=present
-# TODO must omit the 'group' here (so group with same name is created.. else ansible expects the given 'group' to exist)
-#        group={{ accumulo_group }}
 
 - include: accumulo-1-5.yml
   when: accumulo_version | version_compare('1.6', '<')

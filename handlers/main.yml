@@ -1,5 +1,5 @@
 ---
-- name: Restart Accumulo Leader
+- name: Restart Accumulo Master
   service: name=accumulo-master state=restarted
   when: accumulo_leader
 
@@ -17,4 +17,3 @@
 
 - name: Restart Accumulo Tablet Server
   service: name=accumulo-tserver state=restarted
-#  when: not accumulo_leader

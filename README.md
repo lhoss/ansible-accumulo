@@ -1,5 +1,5 @@
 # ansible-accumulo
-An Ansible role for configuring Apache Accumulo.
+An Ansible role for installing and configuring Apache Accumulo.
 
 
 ## Role Variables
@@ -62,14 +62,14 @@ Variables to set the JVM Memory options of the accumulo services:
 Requires roles:
 
 - azavea.build-essential - provides setup of a minimal build environment to build the native libs
-- azavea.java - a basic role to setup JDK-7 (no support for JDK-8 though). Note: JDK-7 is minimal requirement
+- azavea.java - (optional role) to setup JDK-7 (no support for JDK-8 though). Note: JDK-7 is minimal requirement
+
+Requires the accumulo binaries archive (except for < v1.6.2) present in the local ./files dir. Example for v1.7.1: `files/accumulo-1.7.1-bin.tar.gz`
 
 ## Example Playbook
-The role defaults sets variables
-- `accumulo_leader`
-- `accumulo_leader_host` 
-automatically for each host, based on the inventory group 'accumulo_master'.
-Assuming the slaves nodes are in a group `accumulo_slaves`, a reasonable playbook is:
+The role defaults sets variables `accumulo_leader`, `accumulo_leader_host` 
+automatically for each host, based on the inventory group `accumulo_master`.
+Assuming the slave nodes are in a group `accumulo_slaves`, a reasonable playbook is:
     
     - hosts: accumulo_master:accumulo_slaves
       sudo: true
@@ -81,6 +81,7 @@ Assuming the slaves nodes are in a group `accumulo_slaves`, a reasonable playboo
 Apache2
 
 ## Attribution
-Adapted from [geotrellis/vagrant.geotrellis](https://github.com/geotrellis/vagrant.geotrellis/tree/master/ansible/roles/geotrellis.accumulo)
+Inspired from 2 open source roles:
 
-
+* [stumptownlabs.accumulo](https://github.com/stumptownlabs/ansible-accumulo)
+* [azavea.accumulo](https://github.com/azavea/ansible-accumulo)

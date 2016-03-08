@@ -1,5 +1,4 @@
 ---
-#accumulo_leader={{inventory_hostname in groups.accumulo_master}}
 - debug: msg="Accumulo setup started with accumulo_leader={{accumulo_leader}}"
 
 - include: install.yml
@@ -13,8 +12,6 @@
   tags: config
 
 
-## Initially I added below 2 tasks for the functionality that seemed to be a 'failover' try using cron.
-## To use it, uncomment (note: that the task includes existed already, but not below 2 tasks):
 - include: cron_failover_accumulo_leader.yml
   when: accumulo_cron_failover and  accumulo_leader == True
   tags: cron_failover

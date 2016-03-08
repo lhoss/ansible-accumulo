@@ -1,6 +1,5 @@
 ---
 ## role 'accumulo'  (original role azavea.accumulo)
-#accumulo_leader: False
 accumulo_leader: "{{inventory_hostname in groups.accumulo_master}}"
 accumulo_leader_host: "{{groups.accumulo_master[0]}}"
 
@@ -11,7 +10,6 @@ accumulo_conf_dir: "/etc/accumulo/conf"
 accumulo_log_dir: "/var/log/accumulo"
 accumulo_user_dir: "/var/lib/accumulo"
 
-## 'accumulo-distr.yml' include vars
 accumulo_home: /usr/lib/accumulo
 accumulo_parent_dir: /usr/lib
 
@@ -24,7 +22,7 @@ accumulo_trace_user: "root"
 accumulo_trace_password: "{{accumulo_secret}}"
 
 accumulo_user: "accumulo"
-accumulo_group: "accumulo"  # Note if you set a different group, you must ensure the group' exists.
+accumulo_group: "accumulo"
 accumulo_user_shell: "/bin/false"
 accumulo_cron_failover: false
 
@@ -34,12 +32,7 @@ zookeeper_servers:
 hdfs_root_user: "hdfs"
 
 ## config vars required in accumulo-env.sh.j2
-#accumulo_java_home: "{{java_home}}"
 accumulo_java_home: /usr/lib/jvm/java-7-openjdk-amd64
-# Following variable must be set to the folder that contains the zookeeper 'jar':
-#$ZOOKEEPER_HOME/zookeeper[^.].*.jar,
-#libzookeeper-java: /usr/share/java/zookeeper.jar
-#accumulo_zookeeper_home: /usr/share/java
 accumulo_zookeeper_home: /usr/lib/zookeeper
 accumulo_hadoop_home: /usr/lib/hadoop
 
