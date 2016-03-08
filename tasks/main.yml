@@ -10,3 +10,7 @@
 - include: initialize.yml
   when: accumulo_initialize
   tags: initialize
+
+# Finally once Accumulo was initialized, services can be started (and registered)
+- include: service-init.yml
+  tags: service-init

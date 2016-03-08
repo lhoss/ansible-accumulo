@@ -1,0 +1,17 @@
+---
+
+- name: Register and start Accumulo Master services
+  service: name={{ item }} enabled=yes state=started
+  with_items:
+    - "accumulo-master"
+    - "accumulo-monitor"
+    - "accumulo-gc"
+    - "accumulo-tracer"
+    - "accumulo-tserver"
+  when: accumulo_leader == True
+
+- name: Register and start Accumulo Follower services (tserver)
+  service: name={{ item }} enabled=yes state=started
+  with_items:
+    - "accumulo-tserver"
+  when: accumulo_leader == False

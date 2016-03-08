@@ -23,22 +23,3 @@
   copy: content="{{ accumulo_leader_host }}"
         dest="{{ accumulo_conf_dir }}/masters"
         mode=0644
-
-
-- name: Register Accumulo Master services
-  service: name={{ item }} enabled=yes
-  with_items:
-    - "accumulo-master"
-    - "accumulo-monitor"
-    - "accumulo-gc"
-    - "accumulo-tracer"
-    - "accumulo-tserver"
-  when: accumulo_leader == True
-  tags: service-init
-
-- name: Register Accumulo Follower services (tserver)
-  service: name={{ item }} enabled=yes
-  with_items:
-    - "accumulo-tserver"
-  when: accumulo_leader == False
-  tags: service-init
