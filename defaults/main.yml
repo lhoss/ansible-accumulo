@@ -28,6 +28,8 @@ accumulo_user_shell: "/bin/false"
 ## config vars required in accumulo-site.xml
 zookeeper_servers:
  - { ip: "{{accumulo_leader_host}}" }
+# TODO fix bug (from old original role), that ':2181' gets only appended for all but the last server
+accumulo_zookeeper_servers: "{{ zookeeper_servers | map(attribute='ip') | join(':2181,') }}"
 hdfs_root_user: "hdfs"
 
 ## config vars required in accumulo-env.sh.j2

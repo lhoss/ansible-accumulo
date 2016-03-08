@@ -22,6 +22,11 @@
 # below one is a symlink in the new 'distr' setup
 #    - "{{ accumulo_conf_dir }}"
 
+- name: Configure Accumulo Thrift Proxy
+  template: src=services/proxy.properties.j2  dest={{ accumulo_home }}/proxy/proxy.properties mode=0644
+  notify:
+     - Restart Accumulo Proxy
+
 - name: Configure Accumulo service definitions
   template: src=services/accumulo-upstart-template.conf.j2
             dest=/etc/init/accumulo-{{ item.name }}.conf
@@ -30,5 +35,6 @@
     - { name: "gc"}
     - { name: "master"}
     - { name: "monitor", args: "--address 0.0.0.0" }
+    - { name: "proxy",   args: "-p {{ accumulo_home }}/proxy/proxy.properties" }
     - { name: "tracer"}
     - { name: "tserver"}
