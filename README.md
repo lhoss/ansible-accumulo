@@ -37,7 +37,7 @@ Variables with sane defaults:
 
 Settings depending on external dependencies (Zookeeper, HDFS, Java):
 
-- `zookeeper_servers` - (default: `{ ip: "{{accumulo_leader_host}}" }´
+- `accumulo_zookeeper_servers` - A list of comma-separated Zookeeper hosts (default: `{{accumulo_leader_host}}:2181`)
 - `hdfs_root_user` - (default: `hdfs`)
 
 - `accumulo_zookeeper_home` - the ZOOKEEPER_HOME used if not found in the system's ENV
