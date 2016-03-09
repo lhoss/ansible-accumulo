@@ -8,8 +8,8 @@
 - name: Make sure parent directory exists
   file: path={{accumulo_parent_dir}} state=directory owner=root group=root mode=0755 follow=yes
 
-- name: Copy .tgz to {{accumulo_parent_dir}} and unpack it
-  unarchive: src=accumulo-{{accumulo_version}}-bin.tar.gz dest={{accumulo_parent_dir}} owner={{accumulo_user}} group={{accumulo_group}} mode=0755 creates="{{accumulo_home}}-{{accumulo_version}}"
+- name: Deploy archive to {{accumulo_parent_dir}} and unpack it
+  unarchive: src=accumulo-{{accumulo_version}}-bin.tar.gz dest={{accumulo_parent_dir}} owner={{accumulo_user}} group={{accumulo_group}} mode=0755 creates="{{accumulo_parent_dir}}/accumulo-{{accumulo_version}}"
 
 - name: Link accumulo version to {{accumulo_home}}
   file: src={{accumulo_home}}-{{accumulo_version}} dest={{accumulo_home}} owner={{accumulo_user}} group={{accumulo_group}} state=link

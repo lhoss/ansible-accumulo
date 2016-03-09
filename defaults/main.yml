@@ -26,7 +26,7 @@ accumulo_group: "accumulo"
 accumulo_user_shell: "/bin/false"
 
 ## config vars required in accumulo-site.xml
-accumulo_zookeeper_servers: "{{ accumulo_leader_host }}:2181"
+accumulo_zookeeper_servers: "{{accumulo_leader_host}}:2181"
 hdfs_root_user: "hdfs"
 
 ## config vars required in accumulo-env.sh.j2
