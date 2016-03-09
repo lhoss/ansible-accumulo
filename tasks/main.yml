@@ -1,5 +1,5 @@
 ---
-- debug: msg="Accumulo setup started with accumulo_leader={{accumulo_leader}}"
+- debug: msg="Accumulo setup started with accumulo_leader={{accumulo_leader}}, accumulo_slave={{accumulo_slave}}"
 
 - include: install.yml
   tags: install

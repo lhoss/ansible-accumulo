@@ -1,6 +1,8 @@
 ---
 ## role 'accumulo'  (original role azavea.accumulo)
 accumulo_leader: "{{inventory_hostname in groups.accumulo_master}}"
+accumulo_slave:  "{{inventory_hostname in groups.accumulo_slaves}}"
+
 accumulo_leader_host: "{{groups.accumulo_master[0]}}"
 
 #accumulo_version: "1.6.*"

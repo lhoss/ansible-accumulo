@@ -7,14 +7,13 @@
     - "accumulo-monitor"
     - "accumulo-gc"
     - "accumulo-tracer"
-    - "accumulo-tserver"
-  when: accumulo_leader == True
+  when: accumulo_leader
 
 - name: ensure Accumulo Follower services (tserver) are enabled and (re)started
   service: name={{ item }} enabled=no state=stopped
   with_items:
     - "accumulo-tserver"
-  when: accumulo_leader == False
+  when: accumulo_slave
 
 
 # need to make sure any existing 'deb' based accumulo is uninstalled
