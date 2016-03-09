@@ -8,6 +8,7 @@
     - "accumulo-gc"
     - "accumulo-tracer"
     - "accumulo-tserver"
+    - "accumulo-proxy"
   when: accumulo_leader == True
 
 - name: Register and start Accumulo Follower services (tserver)
