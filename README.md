@@ -27,7 +27,8 @@ Variables with sane defaults:
 - `accumulo_home` - the main install dir (equivalent to `ACCUMULO_HOME` ENV var)
 - `accumulo_parent_dir` - the parent dir of `accumulo_home`
 
-- `accumulo_initialize` - (default: `true`) If enabled, accumulo HDFS is initialized (iff  `hdfs:///accumulo/` does not exist)
+- `accumulo_initialize` - If enabled (default: `true`), accumulo HDFS is initialized (iff  `hdfs:///accumulo/` does not exist)
+- `accumulo_instance_volumes` - the `instance.volumes` (default: `hdfs://{{accumulo_leader_host}}/accumulo`)
 - `accumulo_trace_user` - the `trace.user` (default: `root`)
 - `accumulo_trace_password` - the `trace.token.property.password` (default: same as `accumulo_secret`)
 - `accumulo_user` - the accumulo user (default: `accumulo` )

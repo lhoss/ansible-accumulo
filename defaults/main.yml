@@ -17,6 +17,8 @@ accumulo_parent_dir: /usr/lib
 
 ## 'config.yml' include vars (original role stumptownlabs.accumulo)
 accumulo_initialize: True
+#accumulo_instance_volumes: "hdfs:///accumulo"
+accumulo_instance_volumes: "hdfs://{{accumulo_leader_host}}/accumulo"
 
 accumulo_secret: "secret"
 accumulo_instance_name: "geowave-accumulo-cluster"
