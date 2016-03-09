@@ -15,6 +15,17 @@
     - "accumulo-tserver"
   when: accumulo_slave
 
+# Look for dangling upstart conf files for all the services, independent of the node role
+- name: Remove Accumulo service definitions
+  file: path=/etc/init/accumulo-{{ item.name }}.conf state=absent
+  with_items:
+    - { name: "gc" }
+    - { name: "master" }
+    - { name: "monitor" }
+    - { name: "proxy" }
+    - { name: "tracer" }
+    - { name: "tserver" }
+
 
 # need to make sure any existing 'deb' based accumulo is uninstalled
 - name: Uninstall Accumulo pkg (if exists)
