@@ -13,3 +13,12 @@
   command: "/usr/lib/accumulo/bin/build_native_library.sh"
   args:
     creates: "/usr/lib/accumulo/lib/native/libaccumulo.so"
+
+- name: Ensure Accumulo directories are owned by Accumulo user
+  file: path={{ item }}
+        owner={{ accumulo_user }}
+        mode=0755
+        state=directory
+  with_items:
+    - "{{ accumulo_log_dir }}"
+    - "{{ accumulo_conf_dir }}"

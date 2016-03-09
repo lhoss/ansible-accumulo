@@ -20,6 +20,9 @@
 - name: Create accumulo link for conf to /etc/accumulo
   file: src={{accumulo_home}}/conf dest={{accumulo_conf_dir}} owner={{accumulo_user}} group={{accumulo_group}} state=link
 
+- name: Create folder {{accumulo_log_dir}}
+  file: path={{accumulo_log_dir}} state=directory owner={{accumulo_user}} group={{accumulo_group}}
+
 # Note: Q: Why the '/usr/bin/accumulo' symlink?
 # A: 1. why not! 2. it's the same symlink used by the original ansible (so it's easier to overwrite existing one)
 - name: Create link for accumulo to /usr/bin

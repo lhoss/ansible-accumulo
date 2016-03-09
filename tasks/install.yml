@@ -11,16 +11,3 @@
 
 - include: accumulo-distr.yml
   when: accumulo_version | version_compare('1.6.3', '>')
-
-- name: Ensure Accumulo directories are owned by Accumulo user
-  file: path={{ item }}
-        owner={{ accumulo_user }}
-        mode=0755
-        state=directory
-  with_items:
-    - "{{ accumulo_log_dir }}/logs"
-# below one is a symlink in the new 'distr' setup
-#    - "{{ accumulo_conf_dir }}"
-
-
-
