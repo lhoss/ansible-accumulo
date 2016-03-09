@@ -23,7 +23,7 @@
 
   <property>
     <name>instance.zookeeper.host</name>
-    <value>{{ zookeeper_servers | map(attribute="ip") | join(":2181,") }}</value>
+    <value>{{ accumulo_zookeeper_servers }}</value>
     <description>comma separated list of zookeeper servers</description>
   </property>
 
@@ -35,6 +35,20 @@
     <value>160s</value>
     <description>Zookeeper session timeout; max value when represented as milliseconds should be no larger than Integer.MAX_VALUE</description>
   </property>
+
+  <!-- instance.dfs.uri and instance.dfs.dir should not be set (deprecated in favor of instance.volumes) -->
+  <property>
+    <name>instance.volumes</name>
+    <value>{{ accumulo_instance_volumes }}</value>
+  </property>
+  <!-- uncomment below property for "Migrating Accumulo from non-HA Namenode to HA Namenode" (Doc. contains such a section)
+       Note: Of course this property only makes sense when 'accumulo_instance_volumes' uses an HA-Namenode URL -->
+  <!--
+  <property>
+    <name>instance.volumes.replacements</name>
+    <value>hdfs://{{ accumulo_leader_host }}/accumulo {{ accumulo_instance_volumes }}</value>
+  </property>
+  -->
 
   <property>
     <name>logger.dir.walog</name>

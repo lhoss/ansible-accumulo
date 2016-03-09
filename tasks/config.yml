@@ -19,6 +19,13 @@
      - Restart Accumulo Garbage Collector
      - Restart Accumulo Tablet Server
 
+- name: Configure Accumulo Thrift Proxy
+  template: src=services/proxy.properties.j2
+            dest={{ accumulo_home }}/proxy/proxy.properties
+            mode=0644
+  notify:
+     - Restart Accumulo Proxy
+
 - name: Set master for Accumulo followers
   copy: content="{{ accumulo_leader_host }}"
         dest="{{ accumulo_conf_dir }}/masters"

@@ -1,6 +1,8 @@
 ---
 ## role 'accumulo'  (original role azavea.accumulo)
 accumulo_leader: "{{inventory_hostname in groups.accumulo_master}}"
+accumulo_slave:  "{{inventory_hostname in groups.accumulo_slaves}}"
+
 accumulo_leader_host: "{{groups.accumulo_master[0]}}"
 
 #accumulo_version: "1.6.*"
@@ -16,6 +18,8 @@ accumulo_parent_dir: /usr/lib
 ## 'config.yml' include vars
 accumulo_uninstall: False
 accumulo_initialize: True
+#accumulo_instance_volumes: "hdfs:///accumulo"
+accumulo_instance_volumes: "hdfs://{{accumulo_leader_host}}/accumulo"
 
 accumulo_secret: "secret"
 accumulo_instance_name: "geowave-accumulo-cluster"
@@ -27,8 +31,7 @@ accumulo_group: "accumulo"
 accumulo_user_shell: "/bin/false"
 
 ## config vars required in accumulo-site.xml
-zookeeper_servers:
- - { ip: "{{accumulo_leader_host}}" }
+accumulo_zookeeper_servers: "{{accumulo_leader_host}}:2181"
 hdfs_root_user: "hdfs"
 
 ## config vars required in accumulo-env.sh.j2

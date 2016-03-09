@@ -15,5 +15,9 @@
   service: name=accumulo-gc state=restarted
   when: accumulo_leader
 
+- name: Restart Accumulo Proxy
+  service: name=accumulo-proxy state=restarted
+  when: accumulo_leader
+
 - name: Restart Accumulo Tablet Server
   service: name=accumulo-tserver state=restarted
