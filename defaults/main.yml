@@ -46,4 +46,4 @@ accumulo_opts_gc:      "-Xmx256m -Xms256m"
 accumulo_opts_general: "-XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -Djava.net.preferIPv4Stack=true"
 accumulo_opts_other:   "-Xmx1g -Xms256m"
 
-accumulo_log_minLevel: "DEBUG"
+accumulo_log_minLevel: "INFO"

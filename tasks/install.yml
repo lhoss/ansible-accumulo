@@ -7,17 +7,3 @@
         state=present
 
 - include: accumulo-distr.yml
-
-# TODO check the 'logs' dir makes sense
-- name: Ensure Accumulo directories are owned by Accumulo user
-  file: path={{ item }}
-        owner={{ accumulo_user }}
-        mode=0755
-        state=directory
-  with_items:
-    - "{{ accumulo_log_dir }}/logs"
-# below one is a symlink in the new 'distr' setup
-#    - "{{ accumulo_conf_dir }}"
-
-
-

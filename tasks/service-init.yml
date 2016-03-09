@@ -4,11 +4,11 @@
             dest=/etc/init/accumulo-{{ item.name }}.conf
             mode=0644
   with_items:
-    - { name: "gc"}
-    - { name: "master"}
+    - { name: "gc" }
+    - { name: "master" }
     - { name: "monitor", args: "--address 0.0.0.0" }
     - { name: "proxy",   args: "-p {{ accumulo_home }}/proxy/proxy.properties" }
-    - { name: "tracer"}
+    - { name: "tracer" }
   when: accumulo_leader
 
 - name: Configure Accumulo service definitions
@@ -16,7 +16,7 @@
             dest=/etc/init/accumulo-{{ item.name }}.conf
             mode=0644
   with_items:
-    - { name: "tserver"}
+    - { name: "tserver" }
   when: accumulo_slave
 
 
@@ -30,7 +30,7 @@
     - "accumulo-proxy"
   when: accumulo_leader
 
-- name: Register and start Accumulo Follower services (tserver)
+- name: Register and start Accumulo Slave services (tserver)
   service: name={{ item }} enabled=yes state=started
   with_items:
     - "accumulo-tserver"
