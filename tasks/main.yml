@@ -8,7 +8,7 @@
   tags: config
 
 - include: initialize.yml
-  when: accumulo_initialize
+  when: accumulo_initialize and accumulo_leader
   tags: initialize
 
 # Finally once Accumulo was initialized, services can be started (and registered)
