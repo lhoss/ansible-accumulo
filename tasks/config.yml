@@ -12,6 +12,7 @@
     - generic_logger.xml
     - log4j.properties
     - monitor_logger.xml
+    - auditLog.xml
   notify:
      - Restart Accumulo Master
      - Restart Accumulo Monitor

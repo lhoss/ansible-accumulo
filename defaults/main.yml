@@ -46,3 +46,4 @@ accumulo_opts_general: "-XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFracti
 accumulo_opts_other:   "-Xmx1g -Xms256m"
 
 accumulo_log_minLevel: "INFO"
+accumulo_log_pattern: "%d{ISO8601} %-5p %c{3} - %X{application} %m%n"
