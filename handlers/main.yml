@@ -21,3 +21,4 @@
 
 - name: Restart Accumulo Tablet Server
   service: name=accumulo-tserver state=restarted
+  when: accumulo_slave

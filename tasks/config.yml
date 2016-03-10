@@ -27,7 +27,17 @@
   notify:
      - Restart Accumulo Proxy
 
-- name: Set master for Accumulo followers
-  copy: content="{{ accumulo_leader_host }}"
+- name: Configure 'masters' config
+  copy: content="{{ accumulo_leaders | join('\n') }}"
         dest="{{ accumulo_conf_dir }}/masters"
         mode=0644
+  notify:
+     - Restart Accumulo Master
+     - Restart Accumulo Tablet Server
+
+- name: Configure 'slaves' config
+  copy: content="{{ accumulo_slaves | join('\n') }}"
+        dest="{{ accumulo_conf_dir }}/slaves"
+  notify:
+     - Restart Accumulo Master
+     - Restart Accumulo Tablet Server
