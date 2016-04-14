@@ -1,10 +1,5 @@
 ---
 
-## before installing from 'binary distribution', call the uninstaller tasks
-- include: accumulo-deb-uninstall-with-check.yml
-
-
-## 2. Start new install
 - name: Make sure parent directory exists
   file: path={{accumulo_parent_dir}} state=directory owner=root group=root mode=0755 follow=yes
 

@@ -14,7 +14,8 @@ accumulo_user_dir: "/var/lib/accumulo"
 accumulo_home: "/usr/lib/accumulo"
 accumulo_parent_dir: "/usr/lib"
 
-## 'config.yml' include vars (original role stumptownlabs.accumulo)
+## 'config.yml' include vars
+accumulo_uninstall: False
 accumulo_initialize: True
 accumulo_instance_volumes: "hdfs:///accumulo"
 

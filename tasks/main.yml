@@ -1,6 +1,11 @@
 ---
 - debug: msg="Accumulo setup started with accumulo_leader={{accumulo_leader}}, accumulo_slave={{accumulo_slave}}"
 
+## before installing from 'binary distribution', call the uninstaller tasks
+- include: accumulo-deb-uninstall-with-check.yml
+  when: accumulo_uninstall
+  tags: uninstall
+
 - include: install.yml
   tags: install
 

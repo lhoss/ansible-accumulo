@@ -3,15 +3,12 @@
 - name: Check if accumulo deb is installed
   command: apt-cache policy accumulo
   register: aptcache_check
-  tags: uninstall
   always_run: true
 
 - debug: var=aptcache_check
-  tags: uninstall
 
 - set_fact:
     aptpkg_exists: "{{ aptcache_check.stdout | search('Installed: [0-9]') }}"
-  tags: uninstall
 
 
 # 2. uninstall only if deb-based accumulo packages were found (which are assumed to be latest of v1.6.2)
