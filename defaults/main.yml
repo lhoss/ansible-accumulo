@@ -1,4 +1,48 @@
 ---
+## defaults based on existing inventory groups
+accumulo_leaders: "{{groups.accumulo_master}}"
+accumulo_slaves: "{{groups.accumulo_slaves}}"
+accumulo_leader: "{{inventory_hostname in accumulo_leaders}}"
+accumulo_slave:  "{{inventory_hostname in accumulo_slaves}}"
+
+## defaults used for the base install
+accumulo_version: "1.7.1"
+accumulo_conf_dir: "/etc/accumulo/conf"
+accumulo_log_dir: "/var/log/accumulo"
+accumulo_user_dir: "/var/lib/accumulo"
+
+accumulo_home: "/usr/lib/accumulo"
+accumulo_parent_dir: "/usr/lib"
+
+## 'config.yml' include vars
+accumulo_uninstall: False
+accumulo_initialize: True
+accumulo_instance_volumes: "hdfs:///accumulo"
+
 accumulo_secret: "secret"
-accumulo_leader_host: "localhost"
 accumulo_instance_name: "geowave-accumulo-cluster"
+accumulo_trace_user: "root"
+accumulo_trace_password: "{{accumulo_secret}}"
+
+accumulo_user: "accumulo"
+accumulo_group: "accumulo"
+accumulo_user_shell: "/bin/false"
+
+## config vars required in accumulo-site.xml
+accumulo_zookeeper_servers: "localhost:2181"
+hdfs_root_user: "hdfs"
+
+## config vars required in accumulo-env.sh.j2
+accumulo_java_home: "/usr/lib/jvm/java-7-openjdk-amd64"
+accumulo_zookeeper_home: "/usr/lib/zookeeper"
+accumulo_hadoop_home: "/usr/lib/hadoop"
+
+accumulo_opts_tserver: "-Xmx1g -Xms1g -XX:NewSize=500m -XX:MaxNewSize=500m"
+accumulo_opts_master:  "-Xmx1g -Xms1g"
+accumulo_opts_monitor: "-Xmx1g -Xms256m"
+accumulo_opts_gc:      "-Xmx256m -Xms256m"
+accumulo_opts_general: "-XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -Djava.net.preferIPv4Stack=true"
+accumulo_opts_other:   "-Xmx1g -Xms256m"
+
+accumulo_log_minLevel: "INFO"
+accumulo_log_pattern: "%d{ISO8601} %-5p %c{3} - %X{application} %m%n"

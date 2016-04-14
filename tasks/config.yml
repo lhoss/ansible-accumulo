@@ -1,0 +1,43 @@
+---
+- name: Configure Accumulo
+  template: src={{ item }}.j2
+            dest={{ accumulo_conf_dir }}/{{ item }}
+            owner={{ accumulo_user }}
+            group={{ accumulo_group }}
+            mode=0644
+  with_items:
+    - accumulo-env.sh
+    - accumulo-metrics.xml
+    - accumulo-site.xml
+    - generic_logger.xml
+    - log4j.properties
+    - monitor_logger.xml
+    - auditLog.xml
+  notify:
+     - Restart Accumulo Master
+     - Restart Accumulo Monitor
+     - Restart Accumulo Tracer
+     - Restart Accumulo Garbage Collector
+     - Restart Accumulo Tablet Server
+
+- name: Configure Accumulo Thrift Proxy
+  template: src=services/proxy.properties.j2
+            dest={{ accumulo_home }}/proxy/proxy.properties
+            mode=0644
+  notify:
+     - Restart Accumulo Proxy
+
+- name: Configure 'masters' config
+  copy: content="{{ accumulo_leaders | join('\n') }}"
+        dest="{{ accumulo_conf_dir }}/masters"
+        mode=0644
+  notify:
+     - Restart Accumulo Master
+     - Restart Accumulo Tablet Server
+
+- name: Configure 'slaves' config
+  copy: content="{{ accumulo_slaves | join('\n') }}"
+        dest="{{ accumulo_conf_dir }}/slaves"
+  notify:
+     - Restart Accumulo Master
+     - Restart Accumulo Tablet Server

@@ -1,0 +1,37 @@
+---
+- name: Configure Accumulo service definitions
+  template: src=services/accumulo-upstart-template.conf.j2
+            dest=/etc/init/accumulo-{{ item.name }}.conf
+            mode=0644
+  with_items:
+    - { name: "gc" }
+    - { name: "master" }
+    - { name: "monitor", args: "--address 0.0.0.0" }
+    - { name: "proxy",   args: "-p {{ accumulo_home }}/proxy/proxy.properties" }
+    - { name: "tracer" }
+  when: accumulo_leader
+
+- name: Configure Accumulo service definitions
+  template: src=services/accumulo-upstart-template.conf.j2
+            dest=/etc/init/accumulo-{{ item.name }}.conf
+            mode=0644
+  with_items:
+    - { name: "tserver" }
+  when: accumulo_slave
+
+
+- name: Register and start Accumulo Master services
+  service: name={{ item }} enabled=yes state=started
+  with_items:
+    - "accumulo-master"
+    - "accumulo-monitor"
+    - "accumulo-gc"
+    - "accumulo-tracer"
+    - "accumulo-proxy"
+  when: accumulo_leader
+
+- name: Register and start Accumulo Slave services (tserver)
+  service: name={{ item }} enabled=yes state=started
+  with_items:
+    - "accumulo-tserver"
+  when: accumulo_slave

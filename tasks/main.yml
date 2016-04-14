@@ -1,56 +1,21 @@
 ---
-- name: Add Accumulo user to HDFS supergroup
-  user: name=accumulo
-        append=yes
-        group=hadoop
-        state=present
+- debug: msg="Accumulo setup started with accumulo_leader={{accumulo_leader}}, accumulo_slave={{accumulo_slave}}"
 
-- name: Create service definition overrides
-  copy: content="manual"
-        dest=/etc/init/accumulo-{{ item }}.override
-        mode=0644
-  with_items:
-    - gc
-    - master
-    - monitor
-    - tracer
-    - tserver
+## before installing from 'binary distribution', call the uninstaller tasks
+- include: accumulo-deb-uninstall-with-check.yml
+  when: accumulo_uninstall
+  tags: uninstall
 
-- name: Configure Accumulo
-  template: src={{ item }}.j2
-            dest={{ accumulo_conf_dir }}/{{ item }}
-            owner=accumulo
-            group=root
-            mode=0644
-  with_items:
-    - accumulo-env.sh
-    - accumulo-metrics.xml
-    - accumulo-site.xml
-    - generic_logger.xml
-    - log4j.properties
-    - monitor_logger.xml
+- include: install.yml
+  tags: install
 
-- name: Set master for Accumulo followers
-  copy: content="{{ accumulo_leader_host }}"
-        dest="{{ accumulo_conf_dir }}/masters"
-        mode=0644
+- include: config.yml
+  tags: config
 
-- name: Check if accumulo has been initialized
-  shell: hdfs dfs -test -d /accumulo
-  register: hdfs_files
-  ignore_errors: yes
+- include: initialize.yml
+  when: accumulo_initialize and accumulo_leader
+  tags: initialize
 
-
-- name: Initialize Accumulo Leader
-  sudo_user: accumulo
-  command: "accumulo init --instance-name {{ accumulo_instance_name }} --password {{ accumulo_secret }}"
-  when: "hdfs_files.rc == 1"
-
-- name: Restart Accumulo Server
-  service: name={{ item }} enabled=yes state=started
-  with_items:
-    - "accumulo-master"
-    - "accumulo-monitor"
-    - "accumulo-gc"
-    - "accumulo-tracer"
-    - "accumulo-tserver"
+# Finally once Accumulo was initialized, services can be started (and registered)
+- include: service-init.yml
+  tags: service-init

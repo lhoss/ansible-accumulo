@@ -1,0 +1,24 @@
+---
+- name: Restart Accumulo Master
+  service: name=accumulo-master state=restarted
+  when: accumulo_leader
+
+- name: Restart Accumulo Monitor
+  service: name=accumulo-monitor state=restarted
+  when: accumulo_leader
+
+- name: Restart Accumulo Tracer
+  service: name=accumulo-tracer state=restarted
+  when: accumulo_leader
+
+- name: Restart Accumulo Garbage Collector
+  service: name=accumulo-gc state=restarted
+  when: accumulo_leader
+
+- name: Restart Accumulo Proxy
+  service: name=accumulo-proxy state=restarted
+  when: accumulo_leader
+
+- name: Restart Accumulo Tablet Server
+  service: name=accumulo-tserver state=restarted
+  when: accumulo_slave

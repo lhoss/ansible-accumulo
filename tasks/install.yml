@@ -1,0 +1,9 @@
+---
+- name: Create service account for Accumulo
+  user: name={{ accumulo_user }}
+        system=yes
+        home={{ accumulo_user_dir }}
+        shell={{ accumulo_user_shell }}
+        state=present
+
+- include: accumulo-distr.yml
