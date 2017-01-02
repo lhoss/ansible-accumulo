@@ -30,7 +30,6 @@
 
 if [ -z "$HADOOP_HOME" ]
 then
-##lhoss change:
    test -z "$HADOOP_PREFIX"      && export HADOOP_PREFIX={{accumulo_hadoop_home}}
 else
    HADOOP_PREFIX="$HADOOP_HOME"
@@ -38,27 +37,22 @@ else
 fi
 
 test -z "$HADOOP_CONF_DIR"       && export HADOOP_CONF_DIR="/etc/hadoop/conf"
-## Note: JAVA_HOME from  /etc/profile is only working when using ansible shell with 'bash -lc'
 test -z "$JAVA_HOME"             && export JAVA_HOME="{{accumulo_java_home}}"
-#echo "exported JAVA_HOME=$JAVA_HOME"
 test -z "$ZOOKEEPER_HOME"        && export ZOOKEEPER_HOME="{{accumulo_zookeeper_home}}"
 test -z "$ACCUMULO_LOG_DIR"      && export ACCUMULO_LOG_DIR="{{accumulo_log_dir}}"
 if [ -f ${ACCUMULO_CONF_DIR}/accumulo.policy ]
 then
    POLICY="-Djava.security.manager -Djava.security.policy=${ACCUMULO_CONF_DIR}/accumulo.policy"
 fi
-## Orig settings: -Xmx1g -Xms1g -XX:NewSize=500m -XX:MaxNewSize=500m
 test -z "$ACCUMULO_TSERVER_OPTS" && export ACCUMULO_TSERVER_OPTS="${POLICY} {{accumulo_opts_tserver}}"
-## Orig settings: -Xmx1g -Xms1g
 test -z "$ACCUMULO_MASTER_OPTS"  && export ACCUMULO_MASTER_OPTS="${POLICY} {{accumulo_opts_master}}"
 test -z "$ACCUMULO_MONITOR_OPTS" && export ACCUMULO_MONITOR_OPTS="${POLICY} {{accumulo_opts_monitor}}"
 test -z "$ACCUMULO_GC_OPTS"      && export ACCUMULO_GC_OPTS="{{accumulo_opts_gc}}"
 test -z "$ACCUMULO_GENERAL_OPTS" && export ACCUMULO_GENERAL_OPTS="{{accumulo_opts_general}}"
 test -z "$ACCUMULO_OTHER_OPTS"   && export ACCUMULO_OTHER_OPTS="{{accumulo_opts_other}}"
-# what do when the JVM runs out of heap memory
+
+# The cmd to run in case the JVM runs out of heap memory
 export ACCUMULO_KILL_CMD='kill -9 %p'
 
 # Should the monitor bind to all network interfaces -- default: false
 export ACCUMULO_MONITOR_BIND_ALL="true"
-
-

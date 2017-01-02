@@ -1,37 +1,49 @@
 ---
-- name: Configure Accumulo service definitions
+- name: Configure Accumulo Leader service definitions
   template: src=services/accumulo-upstart-template.conf.j2
             dest=/etc/init/accumulo-{{ item.name }}.conf
+            owner=root
+            group=root
             mode=0644
   with_items:
     - { name: "gc" }
     - { name: "master" }
-    - { name: "monitor", args: "--address 0.0.0.0" }
-    - { name: "proxy",   args: "-p {{ accumulo_home }}/proxy/proxy.properties" }
-    - { name: "tracer" }
+    - { name: "monitor" }
   when: accumulo_leader
 
-- name: Configure Accumulo service definitions
+- name: Configure Accumulo Leader service definitions (Tracer)
   template: src=services/accumulo-upstart-template.conf.j2
             dest=/etc/init/accumulo-{{ item.name }}.conf
+            owner=root
+            group=root
+            mode=0644
+  with_items:
+    - { name: "tracer" }
+  when: inventory_hostname in accumulo_tracers
+
+
+- name: Configure Accumulo Slave service definitions
+  template: src=services/accumulo-upstart-template.conf.j2
+            dest=/etc/init/accumulo-{{ item.name }}.conf
+            owner=root
+            group=root
             mode=0644
   with_items:
     - { name: "tserver" }
   when: accumulo_slave
 
-
-- name: Register and start Accumulo Master services
-  service: name={{ item }} enabled=yes state=started
+# Note: No need to set state=started here. the handlers take care (iff configs were created/updated)
+- name: Register Accumulo Master services
+  service: name={{ item }} enabled=yes
   with_items:
     - "accumulo-master"
     - "accumulo-monitor"
     - "accumulo-gc"
     - "accumulo-tracer"
-    - "accumulo-proxy"
   when: accumulo_leader
 
-- name: Register and start Accumulo Slave services (tserver)
-  service: name={{ item }} enabled=yes state=started
+- name: Register Accumulo Tablet-Server (on slaves)
+  service: name={{ item }} enabled={{ accumulo_tserver_service_enabled }}
   with_items:
     - "accumulo-tserver"
   when: accumulo_slave

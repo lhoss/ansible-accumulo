@@ -5,8 +5,8 @@ VAGRANTFILE_API_VERSION = "2"
 
 # Ensure role dependencies are in place
 if [ "up", "provision" ].include?(ARGV.first) &&
-  !(File.directory?("roles/azavea.accumulo") || File.symlink?("roles/azavea.accumulo")) &&
-  !(File.directory?("roles/azavea.java") || File.symlink?("roles/azavea.java")) &&
+  !(File.directory?("roles/accumulo") || File.symlink?("roles/accumulo")) &&
+  !(File.directory?("roles/JasonGiedymin.java") || File.symlink?("roles/JasonGiedymin.java")) &&
   !(File.directory?("roles/azavea.build-essential") || File.symlink?("roles/azavea.build-essential"))
 
   unless system("ansible-galaxy install --force -r roles.txt -p roles")

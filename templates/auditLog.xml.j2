@@ -19,17 +19,18 @@
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
     <!--  Write out Audit info to an Audit file -->
-    <appender name="Audit" class="org.apache.log4j.DailyRollingFileAppender">
+    <appender name="Audit" class="org.apache.log4j.RollingFileAppender">
         <param name="File"           value="${org.apache.accumulo.core.dir.log}/${org.apache.accumulo.core.ip.localhost.hostname}.audit.log"/>
-        <param name="MaxBackupIndex" value="10"/>
-        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <param name="MaxFileSize"    value="200MB"/>
+        <param name="MaxBackupIndex" value="5"/>
+        <param name="Threshold"      value="INFO"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="{{accumulo_log_pattern}}"/>
         </layout>
     </appender>
     <logger name="Audit"  additivity="false">
         <appender-ref ref="Audit" />
-        <level value="INFO"/>
+        <level value="{{accumulo_log_minLevel}}"/>
     </logger>
 
 </log4j:configuration>

@@ -18,37 +18,22 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <configuration>
-  <!-- Put your site-specific accumulo configurations here. The available configuration values along with their defaults are documented in docs/config.html Unless
-    you are simply testing at your workstation, you will most definitely need to change the three entries below. -->
-
   <property>
     <name>instance.zookeeper.host</name>
     <value>{{ accumulo_zookeeper_servers }}</value>
     <description>comma separated list of zookeeper servers</description>
   </property>
 
-  <!-- default timeout: 30s , others tried 60s, see:
-       https://github.com/aglahe/vagrant-memex/blob/master/accumulo/accumulo-site.xml
-   -->
   <property>
     <name>instance.zookeeper.timeout</name>
-    <value>160s</value>
+    <value>{{ accumulo_zookeeper_timeout }}</value>
     <description>Zookeeper session timeout; max value when represented as milliseconds should be no larger than Integer.MAX_VALUE</description>
   </property>
 
-  <!-- instance.dfs.uri and instance.dfs.dir should not be set (deprecated in favor of instance.volumes) -->
   <property>
     <name>instance.volumes</name>
     <value>{{ accumulo_instance_volumes }}</value>
   </property>
-  <!-- uncomment below property for "Migrating Accumulo from non-HA Namenode to HA Namenode" (Doc. contains such a section)
-       Note: Of course this property only makes sense when 'accumulo_instance_volumes' uses an HA-Namenode URL -->
-  <!--
-  <property>
-    <name>instance.volumes.replacements</name>
-    <value>hdfs://{{ accumulo_leaders[0] }}/accumulo {{ accumulo_instance_volumes }}</value>
-  </property>
-  -->
 
   <property>
     <name>logger.dir.walog</name>
@@ -69,67 +54,44 @@
     </description>
   </property>
 
-  <!-- Disable the write-ahead log
-     Disabled the 'write-ahead log, after an Accumulu research paper revealed a ~30% performance gain.
-    -->
-  <!-- default: true , orig: true -->
   <property>
     <name>table.walog.enabled</name>
-    <value>false</value>
+    <value>{{ accumulo_table_walog_enabled }}</value>
   </property>
 
-  <!-- default 1G , orig: 1G -->
   <property>
     <name>tserver.memory.maps.max</name>
-    <value>4G</value>
+    <value>{{ accumulo_tserver_memory_maps_max }}</value>
   </property>
 
   <!-- Important formula beween the 'maps.max' and below 2 settings
     (table.compaction.minor.logs.threshold * tserver.walog.max.size >= tserver.memory.maps.max)
     This formula ensures that minor compactions won't be automatically triggered before the native maps can be completely saturated.
    -->
-  <!-- default 1G , orig: 1G -->
   <property>
     <name>tserver.walog.max.size</name>
-    <value>1G</value>
+    <value>{{ accumulo_tserver_walog_max_size }}</value>
   </property>
-
-  <!-- default 3 , orig: 3 -->
-  <!-- Info from mail-list:
-  2. increasing the number of WALS associated with a tablet...this parameter is table.compaction.minor.logs.threshold
-  but is only important if you are seeing this as the reason for minc in the logs. It's OK to increase it to like 5-6
-   it just makes recovery slower. On a long running ingest if you see spikes that take the rate almost down to zero
-   that's generally what is happening. It gets worse as the number of tablets increases.
-     -->
   <property>
     <name>table.compaction.minor.logs</name>
-    <value>6</value>
+    <value>{{ accumulo_table_compaction_minor_logs }}</value>
   </property>
-
-  <!-- default 1M , orig: 1M -->
   <property>
     <name>tserver.mutation.queue.max</name>
-    <value>8M</value>
+    <value>{{ accumulo_tserver_mutation_queue_max }}</value>
   </property>
 
-  <!-- default 4 , orig: 4 -->
   <property>
     <name>tserver.compaction.minor.concurrent.max</name>
-    <value>4</value>
+    <value>{{ accumulo_tserver_compaction_minor_concurrent_max }}</value>
   </property>
-
-
-
-  <!-- default 128M , orig: 128M -->
   <property>
     <name>tserver.cache.data.size</name>
-    <value>256M</value>
+    <value>{{ accumulo_tserver_cache_data_size }}</value>
   </property>
-
-  <!-- default 512M , orig: 128M -->
   <property>
     <name>tserver.cache.index.size</name>
-    <value>512M</value>
+    <value>{{ accumulo_tserver_cache_index_size }}</value>
   </property>
 
   <property>
@@ -137,10 +99,14 @@
     <!-- change this to the root user's password, and/or change the user below -->
     <value>{{ accumulo_trace_password }}</value>
   </property>
-
   <property>
     <name>trace.user</name>
     <value>{{ accumulo_trace_user }}</value>
+  </property>
+
+  <property>
+    <name>gc.trash.ignore</name>
+    <value>{{ accumulo_gc_trash_ignore }}</value>
   </property>
 
   <property>

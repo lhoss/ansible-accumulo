@@ -1,10 +1,5 @@
 ---
-- debug: msg="Accumulo setup started with accumulo_leader={{accumulo_leader}}, accumulo_slave={{accumulo_slave}}"
-
-## before installing from 'binary distribution', call the uninstaller tasks
-- include: accumulo-deb-uninstall-with-check.yml
-  when: accumulo_uninstall
-  tags: uninstall
+- debug: msg="started setup of Accumulo v{{accumulo_version}} with accumulo_leader={{accumulo_leader}}, accumulo_slave={{accumulo_slave}}"
 
 - include: install.yml
   tags: install
@@ -12,10 +7,9 @@
 - include: config.yml
   tags: config
 
-- include: initialize.yml
+- include: hdfs-folder-init.yml
   when: accumulo_initialize and accumulo_leader
   tags: initialize
 
-# Finally once Accumulo was initialized, services can be started (and registered)
 - include: service-init.yml
   tags: service-init

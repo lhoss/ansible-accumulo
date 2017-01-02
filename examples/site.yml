@@ -2,12 +2,20 @@
 - hosts: all
 
   vars:
-    java_version: "7u95-*"
+    ## java role vars
+    java_version: "8"
+    java_register_env: true
+    use_openjdk_ppa: true
+    ## accumulo role vars
+    accumulo_leader: true
+    accumulo_slave: true
+    # cannot run accumulo (hdfs) init if hdfs is not deployed
+    accumulo_initialize: false
 
   pre_tasks:
     - name: Update APT cache
-      apt: update_cache=yes
+      apt: update_cache=yes cache_valid_time=3600
 
   roles:
-    - { role: "azavea.java" }
-    - { role: "lhoss.accumulo" }
+    - { role: "JasonGiedymin.java" }
+    - { role: "accumulo" }

@@ -26,8 +26,6 @@
      <param name="MaxBackupIndex" value="5"/>
      <param name="Threshold"      value="DEBUG"/>
      <layout class="org.apache.log4j.PatternLayout">
-<!--   <param name="ConversionPattern" value="%d{ISO8601} [%-8c{2}] %-5p: %m%n"/> -->
-<!--   <param name="ConversionPattern" value="%d{ISO8601} %p %C:%M:%L - %m%n"/> -->
        <param name="ConversionPattern" value="{{accumulo_log_pattern}}"/>
      </layout>
   </appender>
@@ -59,7 +57,9 @@
   <!-- Log accumulo events to the debug, normal and remote logs. -->
   <logger name="org.apache.accumulo" additivity="false">
      <level value="DEBUG"/>
+{% if accumulo_debug_log_enabled %}
      <appender-ref ref="A2" />
+{% endif %}
      <appender-ref ref="A3" />
      <appender-ref ref="ASYNC" />
   </logger>
@@ -87,7 +87,7 @@
   <!-- Log non-accumulo events to the debug and normal logs. -->
   <root>
      <level value="{{accumulo_log_minLevel}}"/>
-     <appender-ref ref="A2" />
+<!--     <appender-ref ref="A2" /> -->
      <appender-ref ref="A3" />
   </root>
 

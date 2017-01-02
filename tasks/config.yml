@@ -20,16 +20,11 @@
      - Restart Accumulo Garbage Collector
      - Restart Accumulo Tablet Server
 
-- name: Configure Accumulo Thrift Proxy
-  template: src=services/proxy.properties.j2
-            dest={{ accumulo_home }}/proxy/proxy.properties
-            mode=0644
-  notify:
-     - Restart Accumulo Proxy
-
 - name: Configure 'masters' config
   copy: content="{{ accumulo_leaders | join('\n') }}"
         dest="{{ accumulo_conf_dir }}/masters"
+        owner={{ accumulo_user }}
+        group={{ accumulo_group }}
         mode=0644
   notify:
      - Restart Accumulo Master
@@ -38,6 +33,19 @@
 - name: Configure 'slaves' config
   copy: content="{{ accumulo_slaves | join('\n') }}"
         dest="{{ accumulo_conf_dir }}/slaves"
+        owner={{ accumulo_user }}
+        group={{ accumulo_group }}
+        mode=0644
+  notify:
+     - Restart Accumulo Master
+     - Restart Accumulo Tablet Server
+
+- name: Configure 'tracers' config
+  copy: content="{{ accumulo_tracers | join('\n') }}"
+        dest="{{ accumulo_conf_dir }}/tracers"
+        owner="{{ accumulo_user }}"
+        group="{{ accumulo_group }}"
+        mode=0644
   notify:
      - Restart Accumulo Master
      - Restart Accumulo Tablet Server

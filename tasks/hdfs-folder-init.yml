@@ -2,17 +2,17 @@
 ## Note: below hdfs cmds only works using 'bash -lc' (only a login shell, reads /etc/profile scripts!)
 ## Details see: https://github.com/ansible/ansible/issues/4854
 - name: Check if accumulo has been initialized
-  shell: bash -lc 'hdfs dfs -test -d /accumulo'
+  shell: bash -lc 'hdfs dfs -test -d {{accumulo_instance_initial_dir}}'
   register: hdfs_inited
   changed_when: False
   ignore_errors: yes
+  run_once: true
 
 - debug: var=hdfs_inited
 
-## Note: Instead of 'manually' creating this folder, we could also add 'accumulo' to the hadoop 'admins' group
 - name: "Initialize Accumulo HDFS folder (with hdfs root user {{ hdfs_root_user }} )"
   sudo_user: "{{ hdfs_root_user }}"
-  shell: bash -lc 'hdfs dfs -mkdir /accumulo &&  hdfs dfs -chown {{ accumulo_user }}:{{ accumulo_group }} /accumulo'
+  shell: bash -lc 'hdfs dfs -mkdir {{accumulo_instance_initial_dir}} && hdfs dfs -chown {{ accumulo_user }}:{{ accumulo_group }} {{accumulo_instance_initial_dir}}'
   register: hdfs_dir_created
   failed_when: not hdfs_dir_created.rc==0
   changed_when: hdfs_dir_created.rc==0
@@ -20,10 +20,9 @@
 
 - debug: var=hdfs_dir_created
 
-- name: Double Check if accumulo has been initialized
-  shell: bash -lc 'hdfs dfs -ls /accumulo'
+- name: "Verify folder creation doing an 'ls' on the accumulo_instance_initial_dir (output shown with '-v' flag)"
+  shell: bash -lc 'hdfs dfs -ls {{accumulo_instance_initial_dir}}'
   changed_when: False
-#  when: hdfs_dir_created is defined and hdfs_dir_created.rc==0
 
 - pause: seconds=10 prompt="Plz double check if the accumulo HDFS folder was inited successfully"
   when: hdfs_inited.rc==0  or  (hdfs_dir_created is defined and not hdfs_dir_created.skipped)
@@ -31,8 +30,8 @@
 ## Debug output the init cmd (in case you need to run it manually, as often the case):
 - debug: msg="Init cmd used >accumulo init --instance-name {{ accumulo_instance_name }} --password {{ accumulo_secret }}"
 
-## Also below: if we would use 'bash -lc' we could use the System ENV Vars in accumulo-env.sh
-## Anyway: The work of setting usable defaults, was done already
+## Note: the final 'init' cmd may hang (due to required user input) in cases like instance exists in zookeeper
+## Tip: if you kill the remove ansible ssh session, the ansible controller will show what the 'init' cmd 'asked' the user
 - name: "Initialize Accumulo Leader (if task hangs, the init cmd is probably waiting for user-input!)"
   sudo_user: "{{ accumulo_user }}"
   command: "accumulo init --instance-name {{ accumulo_instance_name }} --password {{ accumulo_secret }}"
