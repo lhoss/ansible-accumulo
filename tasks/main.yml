@@ -1,21 +1,21 @@
 ---
-- debug: msg="Accumulo setup started with accumulo_leader={{accumulo_leader}}"
+- debug: msg="Accumulo setup started with accumulo_leader={{accumulo_leader}}, accumulo_slave={{accumulo_slave}}"
+
+## before installing from 'binary distribution', call the uninstaller tasks
+- include: accumulo-deb-uninstall-with-check.yml
+  when: accumulo_uninstall
+  tags: uninstall
 
 - include: install.yml
   tags: install
 
-- include: cron_failover_config_services_overrides.yml
-  when: accumulo_cron_failover
-  tags: [cron_failover,config]
-
 - include: config.yml
   tags: config
 
+- include: initialize.yml
+  when: accumulo_initialize and accumulo_leader
+  tags: initialize
 
-- include: cron_failover_accumulo_leader.yml
-  when: accumulo_cron_failover and  accumulo_leader == True
-  tags: cron_failover
-
-- include: cron_failover_accumulo_follower.yml
-  when: accumulo_cron_failover and  accumulo_leader == False
-  tags: cron_failover
+# Finally once Accumulo was initialized, services can be started (and registered)
+- include: service-init.yml
+  tags: service-init

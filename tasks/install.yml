@@ -6,32 +6,4 @@
         shell={{ accumulo_user_shell }}
         state=present
 
-- include: accumulo-1-5.yml
-  when: accumulo_version | version_compare('1.6', '<')
-
-- include: accumulo-1-6.yml
-  when: accumulo_version | version_compare('1.6.3', '<') and accumulo_version|version_compare('1.6.0', '>=')
-
 - include: accumulo-distr.yml
-  when: accumulo_version | version_compare('1.6.3', '>')
-
-- name: Ensure Accumulo directories are owned by Accumulo user
-  file: path={{ item }}
-        owner={{ accumulo_user }}
-        mode=0755
-        state=directory
-  with_items:
-    - "{{ accumulo_log_dir }}/logs"
-# below one is a symlink in the new 'distr' setup
-#    - "{{ accumulo_conf_dir }}"
-
-- name: Configure Accumulo service definitions
-  template: src=services/accumulo-upstart-template.conf.j2
-            dest=/etc/init/accumulo-{{ item.name }}.conf
-            mode=0644
-  with_items:
-    - { name: "gc"}
-    - { name: "master"}
-    - { name: "monitor", args: "--address 0.0.0.0" }
-    - { name: "tracer"}
-    - { name: "tserver"}
