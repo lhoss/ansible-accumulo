@@ -24,7 +24,7 @@ Variables whose defaults require either customization or existing inventory grou
 
 Variables with sane defaults: 
 
-- `accumulo_version` - the version (default: `1.7.1`). Should work with v1.7.x (tested only with v1.7.1)
+- `accumulo_version` - the version (default: `1.7.2`). Tested with v1.7.1, v1.7.2, v1.8.0
 - `accumulo_conf_dir` - the conf dir (symlink)
 - `accumulo_log_dir` - the log dir
 - `accumulo_user_dir` - the accumulo user 'home' dir

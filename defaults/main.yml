@@ -7,7 +7,7 @@ accumulo_leader: "{{inventory_hostname in accumulo_leaders}}"
 accumulo_slave:  "{{inventory_hostname in accumulo_slaves}}"
 
 ## defaults used for the base install
-accumulo_version: "1.7.1"
+accumulo_version: "1.7.2"
 accumulo_conf_dir: "/etc/accumulo/conf"
 accumulo_log_dir: "/var/log/accumulo"
 accumulo_user_dir: "/var/lib/accumulo"
