@@ -18,23 +18,24 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
+{% if accumulo_debug_log_enabled %}
   <!-- Write out everything at the DEBUG level to the debug log -->
   <appender name="A2" class="org.apache.log4j.RollingFileAppender">
      <param name="File"           value="${org.apache.accumulo.core.dir.log}/${org.apache.accumulo.core.application}_${org.apache.accumulo.core.ip.localhost.hostname}.debug.log"/>
-     <param name="MaxFileSize"    value="200MB"/>
+     <param name="MaxFileSize"    value="100MB"/>
      <param name="MaxBackupIndex" value="5"/>
      <param name="Threshold"      value="DEBUG"/>
      <layout class="org.apache.log4j.PatternLayout">
-<!--   <param name="ConversionPattern" value="%d{ISO8601} [%-8c{2}] %-5p: %X{application} %m%n"/> -->
        <param name="ConversionPattern" value="{{accumulo_log_pattern}}"/>
      </layout>
   </appender>
+{% endif %}
 
   <!--  Write out INFO and higher to the regular log -->
   <appender name="A3" class="org.apache.log4j.RollingFileAppender">
      <param name="File"           value="${org.apache.accumulo.core.dir.log}/${org.apache.accumulo.core.application}_${org.apache.accumulo.core.ip.localhost.hostname}.log"/>
      <param name="MaxFileSize"    value="100MB"/>
-     <param name="MaxBackupIndex" value="10"/>
+     <param name="MaxBackupIndex" value="5"/>
      <param name="Threshold"      value="{{accumulo_log_minLevel}}"/>
      <layout class="org.apache.log4j.PatternLayout">
        <param name="ConversionPattern" value="{{accumulo_log_pattern}}"/>
@@ -51,7 +52,9 @@
   <logger name="org.apache.accumulo" additivity="false">
      <level value="DEBUG"/>
      <appender-ref ref="A2" />
+{% if accumulo_debug_log_enabled %}
      <appender-ref ref="A3" />
+{% endif %}
      <appender-ref ref="GUI" />
   </logger>
 
@@ -59,7 +62,6 @@
   <root>
      <level value="{{accumulo_log_minLevel}}"/>
      <appender-ref ref="A2" />
-     <appender-ref ref="A3" />
   </root>
 
 </log4j:configuration>

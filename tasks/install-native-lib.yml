@@ -1,0 +1,12 @@
+---
+- name: Install build-essential
+  apt: pkg=build-essential state=present
+
+- name: Make sure lib/native folder is owned by the accumulo user
+  file: path="{{accumulo_home}}/lib/native" state=directory owner={{accumulo_user}} group={{accumulo_group}} mode=0755
+
+- name: Build Accumulo native libraries
+  command: "{{accumulo_home}}/bin/build_native_library.sh"
+  become_user: "{{accumulo_user}}"
+  args:
+    creates: "{{accumulo_home}}/lib/native/libaccumulo.so"

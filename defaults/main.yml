@@ -1,7 +1,8 @@
 ---
 ## defaults based on existing inventory groups
-accumulo_leaders: "{{groups.accumulo_master}}"
-accumulo_slaves: "{{groups.accumulo_slaves}}"
+accumulo_leaders: ["{{inventory_hostname}}"]
+accumulo_slaves:  ["{{inventory_hostname}}"]
+accumulo_tracers: ["{{inventory_hostname}}"]
 accumulo_leader: "{{inventory_hostname in accumulo_leaders}}"
 accumulo_slave:  "{{inventory_hostname in accumulo_slaves}}"
 
@@ -14,13 +15,21 @@ accumulo_user_dir: "/var/lib/accumulo"
 accumulo_home: "/usr/lib/accumulo"
 accumulo_parent_dir: "/usr/lib"
 
+# default used in 'hdfs-folder-init'
+hdfs_root_user: "hdfs"
+
+# If enabled, services are restarted on any config change
+accumulo_service_handlers_enabled: true
+
+accumulo_tserver_service_enabled: true
+
 ## 'config.yml' include vars
-accumulo_uninstall: False
-accumulo_initialize: True
-accumulo_instance_volumes: "hdfs:///accumulo"
+accumulo_initialize: false
+accumulo_instance_initial_dir: "hdfs:///accumulo"
+accumulo_instance_volumes: "{{accumulo_instance_initial_dir}}"
 
 accumulo_secret: "secret"
-accumulo_instance_name: "geowave-accumulo-cluster"
+accumulo_instance_name: "my-accumulo-cluster"
 accumulo_trace_user: "root"
 accumulo_trace_password: "{{accumulo_secret}}"
 
@@ -29,11 +38,27 @@ accumulo_group: "accumulo"
 accumulo_user_shell: "/bin/false"
 
 ## config vars required in accumulo-site.xml
+#
+# Important formula beween the 'maps.max' and 2 other settings:
+# table.compaction.minor.logs.threshold * tserver.walog.max.size >= tserver.memory.maps.max)
+# This formula ensures that minor compactions won't be automatically triggered before the native maps can be completely saturated.
+
 accumulo_zookeeper_servers: "localhost:2181"
-hdfs_root_user: "hdfs"
+# default timeout: 30s , a bit more can be useful
+accumulo_zookeeper_timeout: "160s"
+#  write-ahead log enabled by default. Disabling can result in ~30% performance gain.
+accumulo_table_walog_enabled: "true"
+accumulo_table_compaction_minor_logs: 3
+accumulo_tserver_memory_maps_max: "1G"
+accumulo_tserver_walog_max_size: "1G"
+accumulo_tserver_mutation_queue_max: "1M"
+accumulo_tserver_compaction_minor_concurrent_max: 4
+accumulo_tserver_cache_data_size: "128M"
+accumulo_tserver_cache_index_size: "128M"
+accumulo_gc_trash_ignore: "false"
 
 ## config vars required in accumulo-env.sh.j2
-accumulo_java_home: "/usr/lib/jvm/java-7-openjdk-amd64"
+accumulo_java_home: "/usr/lib/jvm/java-8-openjdk-amd64"
 accumulo_zookeeper_home: "/usr/lib/zookeeper"
 accumulo_hadoop_home: "/usr/lib/hadoop"
 
@@ -44,5 +69,7 @@ accumulo_opts_gc:      "-Xmx256m -Xms256m"
 accumulo_opts_general: "-XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -Djava.net.preferIPv4Stack=true"
 accumulo_opts_other:   "-Xmx1g -Xms256m"
 
+## Log Settings
+accumulo_debug_log_enabled: true
 accumulo_log_minLevel: "INFO"
 accumulo_log_pattern: "%d{ISO8601} %-5p %c{3} - %X{application} %m%n"
